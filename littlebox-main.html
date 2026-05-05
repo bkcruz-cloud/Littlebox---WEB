@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LittleBox — Cada etapa, un aprendizaje</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal: #2D9B8A; --teal-light: #E1F5EE; --teal-dark: #1a6b5e;
+  --coral: #E87B4A; --coral-light: #FFF0E8;
+  --yellow: #F5C842; --yellow-light: #FFFBEB;
+  --pink-light: #FEF0F5; --sage-light: #EEF7F0;
+  --cream: #FDFAF5; --sand: #F7F0E3;
+  --text-dark: #2C2C2A; --text-mid: #5C5C58; --text-light: #9A9A94;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Nunito Sans', sans-serif; background: var(--cream); color: var(--text-dark); font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(253,250,245,0.95); backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(45,155,138,0.1);
+  padding: 0 6%; display: flex; align-items: center; justify-content: space-between; height: 68px;
+}
+.nav-logo { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.45rem; text-decoration: none; display: flex; align-items: center; gap: 9px; }
+.nav-logo .lt { color: var(--teal); } .nav-logo .bx { color: var(--coral); }
+.logo-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+.nav-links a { text-decoration: none; color: var(--text-mid); font-family: 'Nunito', sans-serif; font-weight: 600; font-size: 0.93rem; transition: color 0.2s; }
+.nav-links a:hover { color: var(--teal); }
+.nav-cta { background: var(--coral) !important; color: white !important; padding: 10px 22px; border-radius: 50px; font-weight: 800 !important; box-shadow: 0 4px 14px rgba(232,123,74,0.28); transition: transform 0.15s, background 0.2s !important; }
+.nav-cta:hover { background: #d16a39 !important; transform: translateY(-1px); }
+
+/* HERO */
+.hero {
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 120px 8% 80px; position: relative; overflow: hidden;
+}
+.hero-blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.14; pointer-events: none; }
+.hb1 { width: 560px; height: 560px; background: var(--teal); top: -120px; right: -120px; }
+.hb2 { width: 380px; height: 380px; background: var(--coral); bottom: -60px; left: -80px; }
+.hb3 { width: 260px; height: 260px; background: var(--yellow); top: 45%; left: 35%; }
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--teal-light); color: var(--teal-dark);
+  font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.78rem;
+  padding: 6px 16px; border-radius: 50px; margin-bottom: 28px; letter-spacing: 0.04em;
+  animation: fadeUp 0.5s ease 0.1s both;
+}
+.hero-eyebrow::before { content: '✦'; font-size: 9px; }
+
+h1.hero-h1 {
+  font-size: clamp(2.4rem, 5.5vw, 3.8rem); font-weight: 900; line-height: 1.12;
+  max-width: 720px; margin: 0 auto 24px;
+  animation: fadeUp 0.5s ease 0.2s both;
+}
+.h1-teal { color: var(--teal); } .h1-coral { color: var(--coral); }
+
+.hero-sub {
+  font-size: 1.1rem; color: var(--text-mid); max-width: 500px; margin: 0 auto 40px;
+  line-height: 1.75; font-style: italic;
+  animation: fadeUp 0.5s ease 0.3s both;
+}
+.hero-btns { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; animation: fadeUp 0.5s ease 0.4s both; }
+
+.btn-coral { background: var(--coral); color: white; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem; padding: 15px 34px; border-radius: 50px; border: none; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 6px 22px rgba(232,123,74,0.36); transition: background 0.2s, transform 0.15s, box-shadow 0.2s; }
+.btn-coral:hover { background: #d16a39; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(232,123,74,0.42); }
+.btn-ghost { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--teal); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: gap 0.2s; }
+.btn-ghost:hover { gap: 9px; } .btn-ghost::after { content: '→'; }
+
+.hero-proof {
+  margin-top: 52px; display: flex; align-items: center; justify-content: center; gap: 0;
+  animation: fadeUp 0.5s ease 0.5s both;
+}
+.proof-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 0 32px; border-right: 1px solid #E8E3DA;
+}
+.proof-item:last-child { border-right: none; }
+.proof-num { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--teal); }
+.proof-label { font-size: 0.78rem; color: var(--text-light); font-weight: 600; font-family: 'Nunito', sans-serif; }
+
+/* HOOK */
+.hook-section { background: white; padding: 90px 8%; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.hook-text {}
+.hook-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.hook-card { border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+.hc-teal { background: var(--teal); color: white; grid-column: 1 / -1; }
+.hc-white { background: var(--cream); border: 1.5px solid #EEE9E0; }
+.hc-coral { background: var(--coral-light); }
+.hook-card-icon { font-size: 26px; }
+.hook-card-title { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; }
+.hook-card-desc { font-size: 0.82rem; line-height: 1.5; }
+.hc-teal .hook-card-title { color: white; } .hc-teal .hook-card-desc { color: rgba(255,255,255,0.82); }
+.hc-white .hook-card-title { color: var(--text-dark); } .hc-white .hook-card-desc { color: var(--text-mid); }
+.hc-coral .hook-card-title { color: var(--coral); } .hc-coral .hook-card-desc { color: var(--text-mid); }
+
+/* STAGES */
+.stages-section { background: var(--sand); padding: 90px 8%; }
+.section-header { text-align: center; margin-bottom: 52px; }
+.section-header .section-sub { max-width: 480px; margin: 0 auto; }
+
+.stages-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.stage-card {
+  background: white; border-radius: 20px; overflow: hidden; cursor: pointer;
+  transition: transform 0.22s, box-shadow 0.22s;
+  border: 2px solid transparent;
+}
+.stage-card:hover { transform: translateY(-6px); box-shadow: 0 14px 36px rgba(0,0,0,0.1); }
+.stage-card.active { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(45,155,138,0.12); }
+.stage-top { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 42px; }
+.st-a { background: var(--teal-light); }
+.st-b { background: var(--coral-light); }
+.st-c { background: var(--yellow-light); }
+.st-d { background: var(--pink-light); }
+.st-e { background: var(--sage-light); }
+.stage-body { padding: 14px 12px; }
+.stage-range { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.64rem; color: var(--teal); letter-spacing: 0.05em; margin-bottom: 4px; }
+.stage-name { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.88rem; color: var(--text-dark); margin-bottom: 5px; }
+.stage-desc { font-size: 0.75rem; color: var(--text-mid); line-height: 1.4; }
+
+/* STAGE DETAIL PANEL */
+.stage-panel {
+  margin-top: 24px; border-radius: 24px; overflow: hidden;
+  display: none; animation: panelIn 0.3s ease both;
+}
+.stage-panel.visible { display: block; }
+@keyframes panelIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.panel-inner {
+  background: white; padding: 40px 48px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+}
+.panel-left {}
+.panel-badge { display: inline-block; background: var(--teal); color: white; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.72rem; padding: 4px 12px; border-radius: 50px; margin-bottom: 14px; letter-spacing: 0.04em; }
+.panel-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.6rem; color: var(--text-dark); margin-bottom: 8px; }
+.panel-sub { font-size: 0.95rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 24px; }
+.panel-toys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 28px; }
+.panel-toy { aspect-ratio: 1; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+.panel-right {}
+.panel-features { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+.panel-feat { display: flex; align-items: flex-start; gap: 12px; }
+.feat-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: var(--teal-light); }
+.feat-text {}
+.feat-title { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--text-dark); margin-bottom: 2px; }
+.feat-desc { font-size: 0.82rem; color: var(--text-mid); line-height: 1.45; }
+.panel-price { display: flex; align-items: center; justify-content: space-between; background: var(--sand); border-radius: 16px; padding: 18px 22px; }
+.panel-price-amount { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.8rem; color: var(--text-dark); }
+.panel-price-note { font-size: 0.78rem; color: var(--text-light); font-family: 'Nunito', sans-serif; font-weight: 600; margin-top: 2px; }
+.btn-buy { background: var(--coral); color: white; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; padding: 13px 26px; border-radius: 50px; border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(232,123,74,0.3); transition: background 0.2s, transform 0.15s; }
+.btn-buy:hover { background: #d16a39; transform: translateY(-1px); }
+
+.stages-cta { text-align: center; margin-top: 40px; }
+
+/* WHY */
+.why-section { padding: 90px 8%; background: white; }
+.why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1000px; margin: 0 auto; }
+.why-card { border-radius: 20px; padding: 28px 22px; display: flex; flex-direction: column; gap: 12px; }
+.wc-a { background: var(--teal-light); } .wc-b { background: var(--coral-light); }
+.wc-c { background: var(--yellow-light); } .wc-d { background: var(--sand); }
+.why-icon { font-size: 28px; }
+.why-title { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.98rem; color: var(--text-dark); }
+.why-desc { font-size: 0.83rem; color: var(--text-mid); line-height: 1.55; }
+
+/* SPECIALISTS */
+.spec-section { background: var(--cream); padding: 90px 8%; }
+.spec-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1000px; margin: 0 auto; }
+.spec-card { background: white; border-radius: 20px; padding: 28px 22px; text-align: center; transition: transform 0.2s; }
+.spec-card:hover { transform: translateY(-4px); }
+.spec-av { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1rem; margin: 0 auto 14px; }
+.av-1 { background: var(--teal-light); color: var(--teal-dark); }
+.av-2 { background: #FFD6CC; color: #8B3A1F; }
+.av-3 { background: #FDEAB4; color: #7A5C00; }
+.av-4 { background: #F4D6E8; color: #8B2E5A; }
+.spec-name { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--text-dark); margin-bottom: 4px; }
+.spec-role { font-size: 0.75rem; color: var(--teal); font-weight: 700; font-family: 'Nunito', sans-serif; margin-bottom: 10px; }
+.spec-bio { font-size: 0.78rem; color: var(--text-mid); line-height: 1.5; }
+
+/* KIT CTA BAND */
+.kit-band {
+  background: var(--teal); padding: 90px 8%; text-align: center; position: relative; overflow: hidden;
+}
+.kit-band::before { content: ''; position: absolute; width: 500px; height: 500px; border-radius: 50%; background: rgba(255,255,255,0.05); top: -180px; right: -100px; }
+.kit-band::after { content: ''; position: absolute; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.04); bottom: -80px; left: -60px; }
+.kit-eyebrow { display: inline-block; background: rgba(255,255,255,0.18); color: white; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.78rem; padding: 5px 14px; border-radius: 50px; margin-bottom: 20px; letter-spacing: 0.04em; position: relative; z-index: 1; }
+.kit-title { font-size: clamp(1.9rem, 3.8vw, 2.8rem); font-weight: 900; color: white; max-width: 620px; margin: 0 auto 14px; line-height: 1.2; position: relative; z-index: 1; }
+.kit-sub { color: rgba(255,255,255,0.82); font-size: 1.05rem; max-width: 480px; margin: 0 auto 36px; line-height: 1.7; position: relative; z-index: 1; }
+.kit-chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 40px; position: relative; z-index: 1; }
+.kit-chip { background: rgba(255,255,255,0.14); border: 1.5px solid rgba(255,255,255,0.26); color: white; border-radius: 50px; padding: 8px 18px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.83rem; display: flex; align-items: center; gap: 7px; }
+.btn-white { background: white; color: var(--teal); font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem; padding: 14px 32px; border-radius: 50px; border: none; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 6px 22px rgba(0,0,0,0.12); transition: transform 0.15s, box-shadow 0.2s; position: relative; z-index: 1; }
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,0.18); }
+
+/* TESTIMONIALS */
+.testi-section { background: white; padding: 90px 8%; }
+.testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; max-width: 1000px; margin: 0 auto; }
+.testi-card { background: var(--cream); border-radius: 20px; padding: 28px 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; }
+.testi-stars { color: var(--yellow); font-size: 14px; letter-spacing: 2px; }
+.testi-quote { font-size: 0.92rem; color: var(--text-dark); line-height: 1.65; font-style: italic; flex-grow: 1; }
+.testi-quote::before { content: '"'; } .testi-quote::after { content: '"'; }
+.testi-author { display: flex; align-items: center; gap: 10px; }
+.testi-av { width: 38px; height: 38px; border-radius: 50%; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tav-1 { background: #FFD6CC; color: #8B3A1F; } .tav-2 { background: var(--teal-light); color: var(--teal-dark); } .tav-3 { background: #F4D6E8; color: #8B2E5A; }
+.testi-name { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.85rem; color: var(--text-dark); }
+.testi-detail { font-size: 0.74rem; color: var(--text-light); }
+
+/* FINAL CTA */
+.final-cta { background: var(--sand); padding: 90px 8%; text-align: center; }
+.final-cta-title { font-size: clamp(1.9rem, 3.8vw, 2.8rem); font-weight: 900; color: var(--text-dark); max-width: 560px; margin: 0 auto 14px; line-height: 1.2; }
+.final-cta-sub { color: var(--text-mid); font-size: 1rem; max-width: 400px; margin: 0 auto 36px; line-height: 1.7; }
+.trust-row { display: flex; align-items: center; justify-content: center; gap: 32px; flex-wrap: wrap; margin-top: 32px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.82rem; color: var(--text-light); }
+.tr-item { display: flex; align-items: center; gap: 6px; }
+
+/* FOOTER */
+footer { background: var(--text-dark); color: rgba(255,255,255,0.65); padding: 56px 8% 32px; }
+.footer-top { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 44px; }
+.footer-logo { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.4rem; margin-bottom: 12px; }
+.fl { color: var(--teal); } .fb { color: var(--coral); }
+.footer-tagline { font-size: 0.85rem; line-height: 1.65; margin-bottom: 18px; }
+.footer-social { display: flex; gap: 10px; }
+.soc-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.09); display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; transition: background 0.2s; text-decoration: none; color: white; }
+.soc-btn:hover { background: rgba(255,255,255,0.18); }
+.footer-col h4 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.82rem; color: white; margin-bottom: 16px; letter-spacing: 0.05em; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.footer-col a { text-decoration: none; color: rgba(255,255,255,0.55); font-size: 0.85rem; transition: color 0.2s; }
+.footer-col a:hover { color: white; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 0.78rem; }
+.cert-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.cbadge { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 3px 9px; font-size: 0.7rem; font-family: 'Nunito', sans-serif; font-weight: 700; color: rgba(255,255,255,0.6); }
+
+/* SHARED */
+.section-label { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.72rem; letter-spacing: 0.1em; color: var(--coral); text-transform: uppercase; margin-bottom: 10px; }
+.section-title { font-size: clamp(1.8rem, 3.2vw, 2.4rem); font-weight: 900; color: var(--text-dark); margin-bottom: 14px; line-height: 1.2; }
+.section-sub { font-size: 1rem; color: var(--text-mid); line-height: 1.7; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .stages-grid { grid-template-columns: repeat(3, 1fr); }
+  .why-grid { grid-template-columns: repeat(2, 1fr); }
+  .spec-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .hook-section { grid-template-columns: 1fr; gap: 40px; }
+  .stages-grid { grid-template-columns: repeat(2, 1fr); }
+  .panel-inner { grid-template-columns: 1fr; gap: 24px; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .why-grid { grid-template-columns: 1fr 1fr; }
+  .spec-grid { grid-template-columns: 1fr 1fr; }
+  nav .nav-links li:not(:last-child) { display: none; }
+  .footer-top { grid-template-columns: 1fr; gap: 32px; }
+  .proof-item { padding: 0 16px; }
+}
+@media (max-width: 480px) {
+  .stages-grid { grid-template-columns: 1fr 1fr; }
+  .why-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-icon">🐦</div>
+    <span><span class="lt">Little</span><span class="bx">Box</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#etapas">Los kits</a></li>
+    <li><a href="#por-que">¿Por qué nosotros?</a></li>
+    <li><a href="#especialistas">Especialistas</a></li>
+    <li><a href="#etapas" class="nav-cta">Quiero mi kit</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-blob hb1"></div>
+  <div class="hero-blob hb2"></div>
+  <div class="hero-blob hb3"></div>
+  <div class="hero-eyebrow">Validado por pediatras y psicólogos infantiles</div>
+  <h1 class="hero-h1">
+    Tu bebé <span class="h1-teal">ya está aprendiendo.</span><br>
+    El juguete correcto <span class="h1-coral">hace la diferencia.</span>
+  </h1>
+  <p class="hero-sub">
+    No tienes que ser experta en desarrollo infantil.<br>
+    Nosotros lo somos — y armamos el kit perfecto para la etapa de tu bebé.
+  </p>
+  <div class="hero-btns">
+    <a href="#etapas" class="btn-coral">Encuentra el kit de tu bebé</a>
+    <a href="#por-que" class="btn-ghost">¿Por qué LittleBox?</a>
+  </div>
+  <div class="hero-proof">
+    <div class="proof-item">
+      <div class="proof-num">+1,200</div>
+      <div class="proof-label">familias confían en nosotros</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-num">4</div>
+      <div class="proof-label">especialistas certificados</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-num">5</div>
+      <div class="proof-label">kits por etapa de desarrollo</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-num">100%</div>
+      <div class="proof-label">materiales certificados</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOOK -->
+<section class="hook-section" id="por-que">
+  <div class="hook-text">
+    <div class="section-label">El problema que resolvemos</div>
+    <h2 class="section-title">Elegir juguetes es más difícil de lo que parece</h2>
+    <p class="section-sub" style="margin-bottom:16px;">Las tiendas tienen cientos de opciones. Internet tiene opiniones contradictorias. Y los abuelos tienen ideas propias.</p>
+    <p class="section-sub"><strong style="color:var(--text-dark);">LittleBox resuelve eso.</strong> Cada kit está diseñado para exactamente la etapa en que está tu bebé — con la ciencia detrás, sin que tengas que investigarla tú.</p>
+  </div>
+  <div class="hook-cards">
+    <div class="hook-card hc-teal">
+      <div class="hook-card-icon">🧠</div>
+      <div class="hook-card-title">Ciencia del desarrollo</div>
+      <div class="hook-card-desc">Cada juguete tiene un por qué respaldado por evidencia.</div>
+    </div>
+    <div class="hook-card hc-white">
+      <div class="hook-card-icon">📦</div>
+      <div class="hook-card-title">Listo para usar</div>
+      <div class="hook-card-desc">Llega a tu puerta, sin complicaciones ni decisiones extra.</div>
+    </div>
+    <div class="hook-card hc-coral">
+      <div class="hook-card-icon">🤝</div>
+      <div class="hook-card-title">Acompañamiento incluido</div>
+      <div class="hook-card-desc">No estás sola. La app de seguimiento viene con tu kit.</div>
+    </div>
+  </div>
+</section>
+
+<!-- STAGES -->
+<section class="stages-section" id="etapas">
+  <div class="section-header">
+    <div class="section-label">Los kits</div>
+    <h2 class="section-title">Una caja para cada momento</h2>
+    <p class="section-sub">Selecciona la etapa de tu bebé y te mostramos exactamente qué incluye el kit.</p>
+  </div>
+
+  <div class="stages-grid">
+    <div class="stage-card" onclick="selectStage(0)" id="stage-0">
+      <div class="stage-top st-a">👁️</div>
+      <div class="stage-body">
+        <div class="stage-range">0 — 3 MESES</div>
+        <div class="stage-name">Estimulación visual</div>
+        <p class="stage-desc">Contraste y texturas para los primeros sentidos.</p>
+      </div>
+    </div>
+    <div class="stage-card" onclick="selectStage(1)" id="stage-1">
+      <div class="stage-top st-b">✋</div>
+      <div class="stage-body">
+        <div class="stage-range">3 — 6 MESES</div>
+        <div class="stage-name">Descubrimiento sensorial</div>
+        <p class="stage-desc">Sonidos y colores que despiertan la curiosidad.</p>
+      </div>
+    </div>
+    <div class="stage-card" onclick="selectStage(2)" id="stage-2">
+      <div class="stage-top st-c">📦</div>
+      <div class="stage-body">
+        <div class="stage-range">6 — 12 MESES</div>
+        <div class="stage-name">Exploración activa</div>
+        <p class="stage-desc">Coordinación, agarre y permanencia del objeto.</p>
+      </div>
+    </div>
+    <div class="stage-card" onclick="selectStage(3)" id="stage-3">
+      <div class="stage-top st-d">🚶</div>
+      <div class="stage-body">
+        <div class="stage-range">1 — 2 AÑOS</div>
+        <div class="stage-name">Primeros pasos</div>
+        <p class="stage-desc">Equilibrio y habilidades motoras gruesas.</p>
+      </div>
+    </div>
+    <div class="stage-card" onclick="selectStage(4)" id="stage-4">
+      <div class="stage-top st-e">🧩</div>
+      <div class="stage-body">
+        <div class="stage-range">2 — 3 AÑOS</div>
+        <div class="stage-name">Juego simbólico</div>
+        <p class="stage-desc">Imaginación, lenguaje y habilidades sociales.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL PANEL -->
+  <div class="stage-panel" id="stage-panel">
+    <div class="panel-inner" id="panel-content"></div>
+  </div>
+
+  <div class="stages-cta" id="stages-cta-btn" style="display:none;">
+    <a href="#" class="btn-coral" id="panel-buy-btn">Quiero este kit →</a>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why-section">
+  <div class="section-header">
+    <div class="section-label">¿Por qué LittleBox?</div>
+    <h2 class="section-title">No vendemos juguetes.<br>Vendemos tranquilidad.</h2>
+    <p class="section-sub">Cada kit llega con lo que ninguna tienda puede darte: certeza de que estás haciendo bien.</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-card wc-a">
+      <div class="why-icon">🔬</div>
+      <div class="why-title">Selección con evidencia</div>
+      <p class="why-desc">Ningún juguete entra al kit sin pasar por nuestros especialistas. Ciencia primero, siempre.</p>
+    </div>
+    <div class="why-card wc-b">
+      <div class="why-icon">🎯</div>
+      <div class="why-title">Exacto para su etapa</div>
+      <p class="why-desc">No juguetes genéricos. Cada kit está calibrado para los hitos de desarrollo de ese mes.</p>
+    </div>
+    <div class="why-card wc-c">
+      <div class="why-icon">📱</div>
+      <div class="why-title">Acompañamiento digital</div>
+      <p class="why-desc">Con tu kit accedes a una app con seguimiento de hitos, videos de especialistas y guías prácticas.</p>
+    </div>
+    <div class="why-card wc-d">
+      <div class="why-icon">🛡️</div>
+      <div class="why-title">Seguridad certificada</div>
+      <p class="why-desc">Sin BPA, sin tóxicos. Certificados CE, ASTM y OEKO-TEX. Tu bebé juega seguro.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIALISTS -->
+<section class="spec-section" id="especialistas">
+  <div class="section-header">
+    <div class="section-label">Quiénes nos respaldan</div>
+    <h2 class="section-title">Detrás de cada kit, un equipo de expertos</h2>
+    <p class="section-sub">No elegimos juguetes por intuición. Lo hacemos con pediatras, psicólogas y pedagogas certificadas.</p>
+  </div>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <div class="spec-av av-1">MD</div>
+      <div class="spec-name">Dra. María Elena Domínguez</div>
+      <div class="spec-role">Pediatra del Desarrollo</div>
+      <p class="spec-bio">18 años en neurodesarrollo infantil. Especialista en evaluación motora, cognitiva y emocional temprana.</p>
+    </div>
+    <div class="spec-card">
+      <div class="spec-av av-2">CR</div>
+      <div class="spec-name">Lic. Carmen Lucía Restrepo</div>
+      <div class="spec-role">Psicóloga Infantil</div>
+      <p class="spec-bio">Maestría en Neuropsicología Infantil. Especialista en apego seguro y vínculo madre-bebé.</p>
+    </div>
+    <div class="spec-card">
+      <div class="spec-av av-3">AP</div>
+      <div class="spec-name">Prof. Andrea Palomino</div>
+      <div class="spec-role">Pedagoga Montessori</div>
+      <p class="spec-bio">Coordinadora del programa de estimulación temprana del Ministerio de Educación del Perú.</p>
+    </div>
+    <div class="spec-card">
+      <div class="spec-av av-4">VT</div>
+      <div class="spec-name">Dra. Valentina Torres</div>
+      <div class="spec-role">Terapeuta Ocupacional</div>
+      <p class="spec-bio">Experta en integración sensorial y desarrollo motor fino para cada etapa de crecimiento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- KIT BAND -->
+<section class="kit-band">
+  <div class="kit-eyebrow">✦ Todo en un solo kit</div>
+  <h2 class="kit-title">El kit que tu bebé necesita — y el apoyo que tú mereces</h2>
+  <p class="kit-sub">Juguetes curados por especialistas, guía de desarrollo y acompañamiento digital. Todo junto, desde S/89.</p>
+  <div class="kit-chips">
+    <div class="kit-chip">🧸 Juguetes por etapa</div>
+    <div class="kit-chip">📖 Guía de desarrollo</div>
+    <div class="kit-chip">📱 App de acompañamiento</div>
+    <div class="kit-chip">🎥 Videos con pedagoga</div>
+    <div class="kit-chip">👨‍👩‍👧 Comunidad de padres</div>
+    <div class="kit-chip">🚚 Envío gratis desde S/100</div>
+  </div>
+  <a href="#etapas" class="btn-white">Elegir la etapa de mi bebé →</a>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="section-header">
+    <div class="section-label">Lo que dicen las familias</div>
+    <h2 class="section-title">Más de 1,200 familias confían en LittleBox</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">Por primera vez en meses sentí que estaba haciendo algo bien para mi bebé. El kit llegó perfecto y la guía es clarísima.</p>
+      <div class="testi-author">
+        <div class="testi-av tav-1">LM</div>
+        <div>
+          <div class="testi-name">Lucía M.</div>
+          <div class="testi-detail">Mamá de Mateo, 7 meses · Lima</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">No tenía idea qué juguetes comprar. Con LittleBox no tuve que pensar — todo vino explicado y mi hija lo amó desde el primer día.</p>
+      <div class="testi-author">
+        <div class="testi-av tav-2">SC</div>
+        <div>
+          <div class="testi-name">Sofía C.</div>
+          <div class="testi-detail">Mamá de Isabella, 4 meses · Miraflores</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">Como papá primerizo me daba miedo elegir mal. La app de seguimiento me ayuda a entender qué está logrando mi hijo cada semana.</p>
+      <div class="testi-author">
+        <div class="testi-av tav-3">RP</div>
+        <div>
+          <div class="testi-name">Roberto P.</div>
+          <div class="testi-detail">Papá de Tomás, 10 meses · San Isidro</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="section-label">Empieza hoy</div>
+  <h2 class="final-cta-title">El mejor momento para empezar es <span style="color:var(--coral);">ahora.</span></h2>
+  <p class="final-cta-sub">Tu bebé crece rápido. Cada semana importa. Elige el kit y llegará en 5 días hábiles.</p>
+  <a href="#etapas" class="btn-coral">Quiero el kit de mi bebé →</a>
+  <div class="trust-row">
+    <div class="tr-item">🛡️ Garantía de satisfacción</div>
+    <div class="tr-item">🚚 Envío gratis desde S/100</div>
+    <div class="tr-item">📦 Listo en 2–3 días</div>
+    <div class="tr-item">🔬 Validado por especialistas</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo"><span class="fl">Little</span><span class="fb">Box</span></div>
+      <p class="footer-tagline">Cada etapa, un aprendizaje. Kits de juguetes curados por especialistas para acompañar a tu bebé con ciencia y amor.</p>
+      <div class="footer-social">
+        <a class="soc-btn" href="#">ig</a>
+        <a class="soc-btn" href="#">fb</a>
+        <a class="soc-btn" href="#">tk</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Producto</h4>
+      <ul>
+        <li><a href="#etapas">Los kits</a></li>
+        <li><a href="#por-que">Cómo funciona</a></li>
+        <li><a href="#especialistas">Especialistas</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Soporte</h4>
+      <ul>
+        <li><a href="#">Preguntas frecuentes</a></li>
+        <li><a href="#">Contacto</a></li>
+        <li><a href="#">Envíos y devoluciones</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Privacidad</a></li>
+        <li><a href="#">Términos</a></li>
+        <li><a href="#">Cookies</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 LittleBox · Hecho con amor para las familias peruanas 🐦</div>
+    <div class="cert-badges">
+      <span class="cbadge">CE Europeo</span>
+      <span class="cbadge">ASTM F963</span>
+      <span class="cbadge">Sin BPA</span>
+      <span class="cbadge">OEKO-TEX 100</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+function goToCheckout(idx) {
+  const id = idx !== null ? idx : 2;
+  window.location.href = 'littlebox-checkout.html?stage=' + id;
+}
+
+const stages = [
+  {
+    range: "0 — 3 MESES",
+    name: "Estimulación visual",
+    desc: "En los primeros meses tu bebé está desarrollando su visión. Los contrastes fuertes, los patrones y el movimiento suave son exactamente lo que su cerebro necesita ahora.",
+    toys: ["🖤", "⚪", "🔴", "📖", "🔔", "🧦"],
+    toyBg: ["#f0f0f0","#f0f0f0","#FFF0E8","#E1F5EE","#FFFBEB","#FEF0F5"],
+    features: [
+      { icon:"👁️", title:"Libros de contraste", desc:"Patrones en blanco y negro que favorecen el enfoque y la atención visual temprana." },
+      { icon:"🔔", title:"Sonajero suave", desc:"Estimula la conexión visual-auditiva y los primeros movimientos intencionales." },
+      { icon:"🌀", title:"Móvil de cuna", desc:"Movimiento lento que desarrolla el seguimiento visual y la concentración." },
+    ],
+    price: "S/79",
+    note: "Kit de 4–5 juguetes · Envío gratis"
+  },
+  {
+    range: "3 — 6 MESES",
+    name: "Descubrimiento sensorial",
+    desc: "Tu bebé empieza a agarrar, a llevarse cosas a la boca y a explorar con todos sus sentidos. Es el momento de texturas, sonidos y colores que despierten su curiosidad.",
+    toys: ["🪆","🎯","🧶","🪄","🎪","🔵"],
+    toyBg: ["#E1F5EE","#FFF0E8","#FFFBEB","#FEF0F5","#EEF7F0","#E1F5EE"],
+    features: [
+      { icon:"✋", title:"Sonajeros de agarre", desc:"Diferentes formas y pesos para desarrollar la motricidad fina y el agarre palmar." },
+      { icon:"🎨", title:"Cubos sensoriales", desc:"Texturas, espejos y colores que estimulan la exploración táctil y visual." },
+      { icon:"🎵", title:"Juguetes con sonido", desc:"Causa y efecto: aprende que sus acciones generan resultados." },
+    ],
+    price: "S/85",
+    note: "Kit de 4–5 juguetes · Envío gratis"
+  },
+  {
+    range: "6 — 12 MESES",
+    name: "Exploración activa",
+    desc: "La etapa de gatear, sentarse y comenzar a pararse. Tu bebé necesita juguetes que trabajen la coordinación ojo-mano, la permanencia del objeto y la curiosidad activa.",
+    toys: ["🪆","📦","🎲","🔔","🧸","🪀"],
+    toyBg: ["#FFF0E8","#E1F5EE","#FFFBEB","#FEF0F5","#f0f0f0","#EEF7F0"],
+    features: [
+      { icon:"📦", title:"Encajables y apiladoras", desc:"Permanencia del objeto y coordinación ojo-mano en su máximo desarrollo." },
+      { icon:"🎯", title:"Pelota sensorial", desc:"Movimiento, agarre y exploración táctil para el desarrollo motor activo." },
+      { icon:"📖", title:"Libros de tela", desc:"Primeros conceptos, causa y efecto, y el inicio del lenguaje." },
+    ],
+    price: "S/89",
+    note: "Kit de 5–6 juguetes · Envío gratis"
+  },
+  {
+    range: "1 — 2 AÑOS",
+    name: "Primeros pasos",
+    desc: "Tu bebé ya camina o está a punto de hacerlo. Es el momento de juguetes que trabajen el equilibrio, la motricidad gruesa y la confianza en su propio cuerpo.",
+    toys: ["🛹","🎯","🧩","🔨","🚂","🏀"],
+    toyBg: ["#E1F5EE","#FFF0E8","#FFFBEB","#FEF0F5","#EEF7F0","#f0f0f0"],
+    features: [
+      { icon:"🚶", title:"Juguete de arrastre", desc:"Incentiva la marcha, el equilibrio y la coordinación mientras camina." },
+      { icon:"🔨", title:"Banco de martillar", desc:"Motricidad gruesa, causa-efecto y primera frustración saludable." },
+      { icon:"🧩", title:"Puzzles grandes", desc:"Resolución de problemas, forma y espacio para mentes curiosas." },
+    ],
+    price: "S/92",
+    note: "Kit de 5–6 juguetes · Envío gratis"
+  },
+  {
+    range: "2 — 3 AÑOS",
+    name: "Juego simbólico",
+    desc: "La imaginación explota. Tu bebé ya juega a 'hacer como si' y empieza a relacionarse con otros niños. Juguetes que estimulen el lenguaje, la creatividad y la autonomía.",
+    toys: ["🎭","🖍️","🧱","🍳","🎨","🏠"],
+    toyBg: ["#FFF0E8","#FFFBEB","#E1F5EE","#FEF0F5","#EEF7F0","#f0f0f0"],
+    features: [
+      { icon:"🎭", title:"Set de juego simbólico", desc:"Rol, imaginación y primeras narrativas. Clave para el desarrollo del lenguaje." },
+      { icon:"🧱", title:"Bloques de construcción", desc:"Lógica espacial, creatividad y concentración en proyectos propios." },
+      { icon:"🖍️", title:"Arte y expresión", desc:"Autonomía creativa, motricidad fina y autoexpresión emocional." },
+    ],
+    price: "S/95",
+    note: "Kit de 5–6 juguetes · Envío gratis"
+  }
+];
+
+let activeStage = null;
+
+function selectStage(idx) {
+  // toggle off if same
+  if (activeStage === idx) {
+    document.querySelectorAll('.stage-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('stage-panel').classList.remove('visible');
+    document.getElementById('stages-cta-btn').style.display = 'none';
+    activeStage = null;
+    return;
+  }
+
+  activeStage = idx;
+  const s = stages[idx];
+
+  // highlight card
+  document.querySelectorAll('.stage-card').forEach((c,i) => {
+    c.classList.toggle('active', i === idx);
+  });
+
+  // build panel
+  const toysHTML = s.toys.map((t,i) =>
+    `<div class="panel-toy" style="background:${s.toyBg[i]}">${t}</div>`
+  ).join('');
+
+  const featsHTML = s.features.map(f =>
+    `<div class="panel-feat">
+      <div class="feat-icon">${f.icon}</div>
+      <div class="feat-text">
+        <div class="feat-title">${f.title}</div>
+        <div class="feat-desc">${f.desc}</div>
+      </div>
+    </div>`
+  ).join('');
+
+  document.getElementById('panel-content').innerHTML = `
+    <div class="panel-left">
+      <div class="panel-badge">${s.range}</div>
+      <div class="panel-title">${s.name}</div>
+      <p class="panel-sub">${s.desc}</p>
+      <div class="panel-toys">${toysHTML}</div>
+    </div>
+    <div class="panel-right">
+      <div class="panel-features">${featsHTML}</div>
+      <div class="panel-price">
+        <div>
+          <div class="panel-price-amount">${s.price}</div>
+          <div class="panel-price-note">${s.note}</div>
+        </div>
+        <button class="btn-buy" onclick="goToCheckout(activeStage)">Quiero este kit</button>
+      </div>
+    </div>
+  `;
+
+  const panel = document.getElementById('stage-panel');
+  panel.classList.remove('visible');
+  void panel.offsetWidth; // force reflow for animation
+  panel.classList.add('visible');
+
+  document.getElementById('stages-cta-btn').style.display = 'none';
+
+  // scroll to panel smoothly
+  setTimeout(() => {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 50);
+}
+</script>
+</body>
+</html>

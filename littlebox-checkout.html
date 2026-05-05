@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LittleBox — Tu pedido</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal: #2D9B8A; --teal-light: #E1F5EE; --teal-dark: #1a6b5e;
+  --coral: #E87B4A; --coral-light: #FFF0E8;
+  --yellow: #F5C842; --yellow-light: #FFFBEB;
+  --pink-light: #FEF0F5; --sage-light: #EEF7F0;
+  --cream: #FDFAF5; --sand: #F7F0E3;
+  --text-dark: #2C2C2A; --text-mid: #5C5C58; --text-light: #9A9A94;
+  --border: #EAE5DC;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Nunito Sans', sans-serif; background: var(--sand); color: var(--text-dark); font-size: 16px; line-height: 1.6; min-height: 100vh; }
+h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
+
+/* NAV */
+.checkout-nav {
+  background: white; border-bottom: 1px solid var(--border);
+  padding: 0 6%; display: flex; align-items: center; justify-content: space-between; height: 64px;
+  position: sticky; top: 0; z-index: 100;
+}
+.nav-logo { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+.nav-logo .lt { color: var(--teal); } .nav-logo .bx { color: var(--coral); }
+.logo-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.nav-back { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--text-mid); text-decoration: none; display: flex; align-items: center; gap: 5px; transition: color 0.2s; }
+.nav-back:hover { color: var(--teal); }
+.nav-trust { display: flex; align-items: center; gap: 6px; font-family: 'Nunito', sans-serif; font-weight: 600; font-size: 0.78rem; color: var(--text-light); }
+.nav-trust-icon { font-size: 14px; }
+
+/* PROGRESS BAR */
+.progress-bar {
+  background: white; border-bottom: 1px solid var(--border);
+  padding: 0 6%;
+}
+.progress-inner {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; max-width: 600px; margin: 0 auto; padding: 20px 0;
+}
+.step-item {
+  display: flex; align-items: center; gap: 8px; flex: 1;
+  cursor: pointer; transition: opacity 0.2s;
+}
+.step-item:last-child { flex: 0; }
+.step-circle {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.8rem;
+  transition: all 0.3s;
+  border: 2px solid var(--border); background: white; color: var(--text-light);
+}
+.step-label { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.78rem; color: var(--text-light); white-space: nowrap; transition: color 0.3s; }
+.step-connector { flex: 1; height: 2px; background: var(--border); margin: 0 8px; transition: background 0.3s; min-width: 20px; }
+
+.step-item.done .step-circle { background: var(--teal); border-color: var(--teal); color: white; }
+.step-item.done .step-label { color: var(--teal); }
+.step-item.done + .step-connector { background: var(--teal); }
+.step-item.active .step-circle { background: var(--coral); border-color: var(--coral); color: white; box-shadow: 0 0 0 4px rgba(232,123,74,0.15); }
+.step-item.active .step-label { color: var(--coral); font-weight: 800; }
+
+/* LAYOUT */
+.checkout-layout {
+  max-width: 1060px; margin: 32px auto; padding: 0 6%;
+  display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start;
+}
+
+/* MAIN CARD */
+.checkout-main {
+  background: white; border-radius: 24px; border: 1px solid var(--border); overflow: hidden;
+}
+.step-panel { display: none; animation: fadeIn 0.3s ease both; }
+.step-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.step-header { padding: 32px 36px 24px; border-bottom: 1px solid var(--border); }
+.step-header-num { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.72rem; color: var(--coral); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+.step-header h2 { font-size: 1.5rem; font-weight: 900; color: var(--text-dark); margin-bottom: 4px; }
+.step-header p { font-size: 0.9rem; color: var(--text-mid); }
+
+.step-body { padding: 28px 36px; }
+
+/* STEP 1 — KIT CONFIRMED */
+.kit-confirmed-card {
+  background: var(--cream); border-radius: 18px; padding: 24px;
+  display: flex; gap: 20px; align-items: center; margin-bottom: 20px;
+  border: 2px solid var(--teal-light);
+}
+.kit-confirmed-icon {
+  width: 72px; height: 72px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center; font-size: 36px; flex-shrink: 0;
+}
+.kit-confirmed-info { flex: 1; }
+.kit-confirmed-range { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.7rem; color: var(--teal); letter-spacing: 0.06em; margin-bottom: 4px; }
+.kit-confirmed-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.2rem; color: var(--text-dark); margin-bottom: 6px; }
+.kit-confirmed-desc { font-size: 0.85rem; color: var(--text-mid); line-height: 1.5; }
+.kit-confirmed-price { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.4rem; color: var(--text-dark); }
+
+.kit-includes-title { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.85rem; color: var(--text-dark); margin-bottom: 14px; }
+.kit-includes-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.kit-include-item { display: flex; align-items: center; gap: 12px; font-size: 0.88rem; color: var(--text-mid); }
+.ki-check { width: 22px; height: 22px; border-radius: 50%; background: var(--teal-light); color: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; font-weight: 800; }
+
+/* STEP 2 — CUSTOMIZE */
+.customize-intro { font-size: 0.88rem; color: var(--text-mid); margin-bottom: 22px; line-height: 1.6; background: var(--yellow-light); border-radius: 12px; padding: 14px 16px; }
+.toys-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+.toy-option {
+  border: 2px solid var(--border); border-radius: 16px; padding: 16px 12px;
+  text-align: center; cursor: pointer; transition: all 0.2s; position: relative;
+  background: white;
+}
+.toy-option:hover { border-color: var(--teal-light); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.toy-option.selected { border-color: var(--teal); background: var(--teal-light); }
+.toy-option.selected .toy-check { display: flex; }
+.toy-check {
+  display: none; position: absolute; top: -8px; right: -8px;
+  width: 22px; height: 22px; border-radius: 50%; background: var(--teal);
+  align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 800;
+}
+.toy-emoji { font-size: 32px; margin-bottom: 8px; }
+.toy-name { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.8rem; color: var(--text-dark); margin-bottom: 3px; }
+.toy-area { font-size: 0.7rem; color: var(--text-light); }
+.customize-counter {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--sand); border-radius: 12px; padding: 14px 18px;
+}
+.counter-text { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--text-mid); }
+.counter-num { font-family: 'Nunito', sans-serif; font-weight: 900; color: var(--teal); }
+
+/* STEP 3 — SHIPPING */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.82rem; color: var(--text-dark); }
+.form-input {
+  border: 1.5px solid var(--border); border-radius: 12px; padding: 11px 14px;
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.92rem; color: var(--text-dark);
+  background: white; outline: none; transition: border-color 0.2s;
+}
+.form-input:focus { border-color: var(--teal); }
+.form-input::placeholder { color: var(--text-light); }
+select.form-input { cursor: pointer; }
+
+.shipping-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+.shipping-option {
+  border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 18px;
+  display: flex; align-items: center; gap: 14px; cursor: pointer; transition: all 0.2s;
+}
+.shipping-option:hover { border-color: var(--teal-light); }
+.shipping-option.selected { border-color: var(--teal); background: var(--teal-light); }
+.shipping-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.shipping-option.selected .shipping-radio { border-color: var(--teal); background: var(--teal); }
+.shipping-option.selected .shipping-radio::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: white; }
+.shipping-info { flex: 1; }
+.shipping-name { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--text-dark); }
+.shipping-eta { font-size: 0.78rem; color: var(--text-mid); }
+.shipping-price { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.95rem; color: var(--text-dark); }
+.shipping-price.free { color: var(--teal); }
+
+/* STEP 4 — PAYMENT */
+.payment-methods { display: flex; gap: 10px; margin-bottom: 22px; }
+.pay-method {
+  flex: 1; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px;
+  text-align: center; cursor: pointer; transition: all 0.2s;
+}
+.pay-method:hover { border-color: var(--teal-light); }
+.pay-method.selected { border-color: var(--teal); background: var(--teal-light); }
+.pay-method-icon { font-size: 22px; margin-bottom: 5px; }
+.pay-method-name { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.78rem; color: var(--text-dark); }
+
+.card-fields { background: var(--cream); border-radius: 16px; padding: 22px; margin-bottom: 22px; }
+.card-fields-title { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.85rem; color: var(--text-dark); margin-bottom: 16px; }
+.card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.yape-info { background: #6C3CE1; border-radius: 16px; padding: 22px; text-align: center; margin-bottom: 22px; }
+.yape-info-title { font-family: 'Nunito', sans-serif; font-weight: 900; color: white; font-size: 1rem; margin-bottom: 6px; }
+.yape-info-sub { color: rgba(255,255,255,0.8); font-size: 0.85rem; margin-bottom: 14px; }
+.yape-number { background: rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 20px; color: white; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.2rem; display: inline-block; margin-bottom: 10px; }
+.yape-steps { text-align: left; display: flex; flex-direction: column; gap: 6px; }
+.yape-step { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.85); font-size: 0.82rem; }
+.yape-step-num { width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.2); color: white; display: flex; align-items: center; justify-content: center; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.7rem; flex-shrink: 0; }
+
+.plin-info { background: #00C896; border-radius: 16px; padding: 22px; text-align: center; margin-bottom: 22px; }
+.plin-info-title { font-family: 'Nunito', sans-serif; font-weight: 900; color: white; font-size: 1rem; margin-bottom: 6px; }
+.plin-info-sub { color: rgba(255,255,255,0.85); font-size: 0.85rem; margin-bottom: 14px; }
+.plin-number { background: rgba(255,255,255,0.2); border-radius: 10px; padding: 10px 20px; color: white; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.2rem; display: inline-block; }
+
+.security-note { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-light); font-family: 'Nunito', sans-serif; font-weight: 600; margin-bottom: 22px; }
+
+/* STEP FOOTER */
+.step-footer { padding: 20px 36px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.btn-next {
+  background: var(--coral); color: white;
+  font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem;
+  padding: 13px 30px; border-radius: 50px; border: none; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(232,123,74,0.32); transition: background 0.2s, transform 0.15s;
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-next:hover { background: #d16a39; transform: translateY(-1px); }
+.btn-next:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; transform: none; }
+.btn-prev { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--text-mid); background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: color 0.2s; }
+.btn-prev:hover { color: var(--text-dark); }
+
+/* SUMMARY SIDEBAR */
+.checkout-sidebar { position: sticky; top: 90px; }
+.sidebar-card { background: white; border-radius: 24px; border: 1px solid var(--border); overflow: hidden; }
+.sidebar-header { padding: 22px 24px; border-bottom: 1px solid var(--border); }
+.sidebar-header h3 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1rem; color: var(--text-dark); }
+.sidebar-kit { display: flex; gap: 12px; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border); }
+.sidebar-kit-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.sidebar-kit-info { flex: 1; }
+.sidebar-kit-name { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--text-dark); }
+.sidebar-kit-range { font-size: 0.75rem; color: var(--text-light); }
+.sidebar-kit-price { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1rem; color: var(--text-dark); }
+.sidebar-extras { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.sidebar-extra { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--text-mid); }
+.sidebar-extra-label { display: flex; align-items: center; gap: 6px; }
+.sidebar-extra-val { font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--text-dark); }
+.sidebar-extra-val.free { color: var(--teal); }
+.sidebar-total { padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; }
+.sidebar-total-label { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--text-dark); }
+.sidebar-total-amount { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.4rem; color: var(--teal); }
+
+.sidebar-includes { padding: 0 24px 22px; display: flex; flex-direction: column; gap: 8px; }
+.si-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-mid); }
+.si-icon { font-size: 13px; }
+
+.sidebar-trust { background: var(--cream); padding: 18px 24px; display: flex; flex-direction: column; gap: 8px; }
+.trust-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-mid); font-family: 'Nunito', sans-serif; font-weight: 600; }
+
+/* SUCCESS SCREEN */
+.success-screen {
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 60px 36px; gap: 16px;
+}
+.success-screen.active { display: flex; }
+.success-icon { font-size: 64px; margin-bottom: 8px; }
+.success-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.8rem; color: var(--text-dark); }
+.success-sub { font-size: 1rem; color: var(--text-mid); max-width: 380px; line-height: 1.7; }
+.success-order { background: var(--teal-light); border-radius: 14px; padding: 16px 24px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--teal-dark); }
+.success-app { background: var(--coral-light); border-radius: 18px; padding: 22px 28px; margin-top: 8px; width: 100%; max-width: 380px; }
+.success-app-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1rem; color: var(--coral); margin-bottom: 6px; }
+.success-app-sub { font-size: 0.85rem; color: var(--text-mid); line-height: 1.55; margin-bottom: 14px; }
+.btn-app { background: var(--coral); color: white; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.9rem; padding: 11px 24px; border-radius: 50px; border: none; cursor: pointer; }
+
+@media (max-width: 860px) {
+  .checkout-layout { grid-template-columns: 1fr; }
+  .checkout-sidebar { position: static; }
+  .form-grid { grid-template-columns: 1fr; }
+  .card-row { grid-template-columns: 1fr; }
+  .toys-grid { grid-template-columns: repeat(2, 1fr); }
+  .payment-methods { flex-wrap: wrap; }
+}
+@media (max-width: 560px) {
+  .step-header { padding: 24px 22px 18px; }
+  .step-body { padding: 20px 22px; }
+  .step-footer { padding: 16px 22px; flex-direction: column-reverse; gap: 12px; }
+  .btn-next { width: 100%; justify-content: center; }
+  .btn-prev { width: 100%; justify-content: center; }
+  .progress-inner { gap: 0; }
+  .step-label { display: none; }
+  .step-connector { min-width: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="checkout-nav">
+  <a href="littlebox-main.html" class="nav-logo">
+    <div class="logo-icon">🐦</div>
+    <span><span class="lt">Little</span><span class="bx">Box</span></span>
+  </a>
+  <a href="littlebox-main.html" class="nav-back">← Volver al inicio</a>
+  <div class="nav-trust"><span class="nav-trust-icon">🔒</span> Pago 100% seguro</div>
+</nav>
+
+<!-- PROGRESS -->
+<div class="progress-bar">
+  <div class="progress-inner">
+    <div class="step-item active" id="prog-0">
+      <div class="step-circle">1</div>
+      <div class="step-label">Tu kit</div>
+    </div>
+    <div class="step-connector" id="conn-0"></div>
+    <div class="step-item" id="prog-1">
+      <div class="step-circle">2</div>
+      <div class="step-label">Personalizar</div>
+    </div>
+    <div class="step-connector" id="conn-1"></div>
+    <div class="step-item" id="prog-2">
+      <div class="step-circle">3</div>
+      <div class="step-label">Envío</div>
+    </div>
+    <div class="step-connector" id="conn-2"></div>
+    <div class="step-item" id="prog-3">
+      <div class="step-circle">4</div>
+      <div class="step-label">Pago</div>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="checkout-layout">
+
+  <!-- MAIN -->
+  <div class="checkout-main">
+
+    <!-- STEP 1: KIT CONFIRMADO -->
+    <div class="step-panel active" id="step-0">
+      <div class="step-header">
+        <div class="step-header-num">Paso 1 de 4</div>
+        <h2>Tu kit seleccionado</h2>
+        <p>Confirma que este es el kit correcto para la etapa de tu bebé.</p>
+      </div>
+      <div class="step-body">
+        <div class="kit-confirmed-card" id="kit-card">
+          <div class="kit-confirmed-icon" id="kit-icon">📦</div>
+          <div class="kit-confirmed-info">
+            <div class="kit-confirmed-range" id="kit-range">6 — 12 MESES</div>
+            <div class="kit-confirmed-name" id="kit-name">Exploración activa</div>
+            <div class="kit-confirmed-desc" id="kit-desc">Coordinación, agarre y permanencia del objeto.</div>
+          </div>
+          <div class="kit-confirmed-price" id="kit-price">S/89</div>
+        </div>
+
+        <div class="kit-includes-title">¿Qué incluye tu kit?</div>
+        <div class="kit-includes-list">
+          <div class="kit-include-item"><div class="ki-check">✓</div>5–6 juguetes curados por especialistas</div>
+          <div class="kit-include-item"><div class="ki-check">✓</div>Ficha de cada juguete con instrucciones de uso</div>
+          <div class="kit-include-item"><div class="ki-check">✓</div>Mini guía de desarrollo para esta etapa</div>
+          <div class="kit-include-item"><div class="ki-check">✓</div>Acceso a la app de acompañamiento LittleBox</div>
+          <div class="kit-include-item"><div class="ki-check">✓</div>Videos exclusivos con la pedagoga</div>
+          <div class="kit-include-item"><div class="ki-check">✓</div>Comunidad privada de padres</div>
+        </div>
+      </div>
+      <div class="step-footer">
+        <div></div>
+        <button class="btn-next" onclick="goToStep(1)">Personalizar mi kit →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: PERSONALIZAR -->
+    <div class="step-panel" id="step-1">
+      <div class="step-header">
+        <div class="step-header-num">Paso 2 de 4</div>
+        <h2>Personaliza tu kit</h2>
+        <p>Elige los juguetes que más se adaptan a tu bebé. Incluye mínimo 3.</p>
+      </div>
+      <div class="step-body">
+        <div class="customize-intro">
+          💡 Todos los juguetes están curados por nuestros especialistas para esta etapa. Puedes elegir los que más se adapten a los intereses de tu bebé.
+        </div>
+        <div class="toys-grid" id="toys-grid"></div>
+        <div class="customize-counter">
+          <div class="counter-text">Juguetes seleccionados: <span class="counter-num" id="counter">0</span></div>
+          <div style="font-size:0.78rem;color:var(--text-light);font-family:'Nunito',sans-serif;font-weight:600;">Mínimo 3 · Máximo 6</div>
+        </div>
+      </div>
+      <div class="step-footer">
+        <button class="btn-prev" onclick="goToStep(0)">← Atrás</button>
+        <button class="btn-next" id="btn-next-2" onclick="goToStep(2)" disabled>Continuar con el envío →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: ENVÍO -->
+    <div class="step-panel" id="step-2">
+      <div class="step-header">
+        <div class="step-header-num">Paso 3 de 4</div>
+        <h2>Datos de envío</h2>
+        <p>¿Dónde enviamos tu kit?</p>
+      </div>
+      <div class="step-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input class="form-input" type="text" placeholder="Tu nombre" id="f-name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Apellido</label>
+            <input class="form-input" type="text" placeholder="Tu apellido" id="f-lastname">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input class="form-input" type="tel" placeholder="987 654 321" id="f-phone">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Correo electrónico</label>
+            <input class="form-input" type="email" placeholder="tu@correo.com" id="f-email">
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Dirección</label>
+            <input class="form-input" type="text" placeholder="Av. Larco 1234, Dpto. 5B" id="f-address">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Distrito</label>
+            <select class="form-input" id="f-district">
+              <option value="">Selecciona...</option>
+              <option>Miraflores</option><option>San Isidro</option><option>Surco</option>
+              <option>San Borja</option><option>La Molina</option><option>Barranco</option>
+              <option>Jesús María</option><option>Lince</option><option>Magdalena</option>
+              <option>Pueblo Libre</option><option>San Miguel</option><option>Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Referencia (opcional)</label>
+            <input class="form-input" type="text" placeholder="Frente al parque..." id="f-ref">
+          </div>
+        </div>
+
+        <div class="kit-includes-title">Método de envío</div>
+        <div class="shipping-options">
+          <div class="shipping-option selected" onclick="selectShipping(this, 'estandar')">
+            <div class="shipping-radio"></div>
+            <div class="shipping-info">
+              <div class="shipping-name">Envío estándar</div>
+              <div class="shipping-eta">5–7 días hábiles · Lima Metropolitana</div>
+            </div>
+            <div class="shipping-price free" id="ship-price-1">Gratis</div>
+          </div>
+          <div class="shipping-option" onclick="selectShipping(this, 'express')">
+            <div class="shipping-radio"></div>
+            <div class="shipping-info">
+              <div class="shipping-name">Envío express</div>
+              <div class="shipping-eta">1–2 días hábiles · Lima Metropolitana</div>
+            </div>
+            <div class="shipping-price">S/15</div>
+          </div>
+          <div class="shipping-option" onclick="selectShipping(this, 'provincia')">
+            <div class="shipping-radio"></div>
+            <div class="shipping-info">
+              <div class="shipping-name">Provincias</div>
+              <div class="shipping-eta">7–10 días hábiles · Todo el Perú</div>
+            </div>
+            <div class="shipping-price">S/25</div>
+          </div>
+        </div>
+      </div>
+      <div class="step-footer">
+        <button class="btn-prev" onclick="goToStep(1)">← Atrás</button>
+        <button class="btn-next" onclick="validateShipping()">Continuar al pago →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: PAGO -->
+    <div class="step-panel" id="step-3">
+      <div class="step-header">
+        <div class="step-header-num">Paso 4 de 4</div>
+        <h2>Método de pago</h2>
+        <p>Elige cómo quieres pagar tu kit.</p>
+      </div>
+      <div class="step-body">
+        <div class="payment-methods">
+          <div class="pay-method selected" onclick="selectPayment(this,'tarjeta')">
+            <div class="pay-method-icon">💳</div>
+            <div class="pay-method-name">Tarjeta</div>
+          </div>
+          <div class="pay-method" onclick="selectPayment(this,'yape')">
+            <div class="pay-method-icon">📱</div>
+            <div class="pay-method-name">Yape</div>
+          </div>
+          <div class="pay-method" onclick="selectPayment(this,'plin')">
+            <div class="pay-method-icon">💚</div>
+            <div class="pay-method-name">Plin</div>
+          </div>
+          <div class="pay-method" onclick="selectPayment(this,'transferencia')">
+            <div class="pay-method-icon">🏦</div>
+            <div class="pay-method-name">Transferencia</div>
+          </div>
+        </div>
+
+        <!-- TARJETA -->
+        <div class="card-fields" id="pay-tarjeta">
+          <div class="card-fields-title">Datos de tu tarjeta</div>
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">Número de tarjeta</label>
+            <input class="form-input" type="text" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
+          </div>
+          <div class="card-row">
+            <div class="form-group">
+              <label class="form-label">Vencimiento</label>
+              <input class="form-input" type="text" placeholder="MM/AA" maxlength="5" oninput="formatExpiry(this)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">CVV</label>
+              <input class="form-input" type="text" placeholder="123" maxlength="4">
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:14px;">
+            <label class="form-label">Nombre en la tarjeta</label>
+            <input class="form-input" type="text" placeholder="Como aparece en la tarjeta">
+          </div>
+        </div>
+
+        <!-- YAPE -->
+        <div class="yape-info" id="pay-yape" style="display:none;">
+          <div class="yape-info-title">Paga con Yape</div>
+          <div class="yape-info-sub">Realiza la transferencia al siguiente número</div>
+          <div class="yape-number">📱 987 654 321</div>
+          <div class="yape-steps">
+            <div class="yape-step"><div class="yape-step-num">1</div>Abre tu app de Yape</div>
+            <div class="yape-step"><div class="yape-step-num">2</div>Transfiere el monto exacto al número</div>
+            <div class="yape-step"><div class="yape-step-num">3</div>Sube el voucher al confirmar</div>
+          </div>
+        </div>
+
+        <!-- PLIN -->
+        <div class="plin-info" id="pay-plin" style="display:none;">
+          <div class="plin-info-title">Paga con Plin</div>
+          <div class="plin-info-sub">Transfiere el monto exacto a este número</div>
+          <div class="plin-number">💚 987 654 321</div>
+        </div>
+
+        <!-- TRANSFERENCIA -->
+        <div class="card-fields" id="pay-transferencia" style="display:none;">
+          <div class="card-fields-title">Datos bancarios</div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label class="form-label">Banco</label>
+            <input class="form-input" type="text" value="BCP" readonly style="color:var(--text-mid)">
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label class="form-label">Cuenta corriente</label>
+            <input class="form-input" type="text" value="194-12345678-0-12" readonly style="color:var(--text-mid)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CCI</label>
+            <input class="form-input" type="text" value="002-194-001234567801-20" readonly style="color:var(--text-mid)">
+          </div>
+        </div>
+
+        <div class="security-note">🔒 Tus datos están protegidos con encriptación SSL de 256 bits</div>
+      </div>
+      <div class="step-footer">
+        <button class="btn-prev" onclick="goToStep(2)">← Atrás</button>
+        <button class="btn-next" onclick="completePurchase()">Confirmar pedido ✓</button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="success-screen">
+      <div class="success-icon">🎉</div>
+      <h2 class="success-title">¡Tu kit está en camino!</h2>
+      <p class="success-sub">Gracias por confiar en LittleBox. Te enviaremos una confirmación a tu correo con el seguimiento del pedido.</p>
+      <div class="success-order" id="success-order-num">Pedido #LB-2026-0042</div>
+      <div class="success-app">
+        <div class="success-app-title">📱 Ya tienes acceso a la app</div>
+        <div class="success-app-sub">Con tu compra desbloqueaste el acompañamiento completo: seguimiento de hitos, videos con la pedagoga y comunidad de padres.</div>
+        <button class="btn-app" onclick="alert('Aquí iría la descarga de la app')">Descargar la app →</button>
+      </div>
+    </div>
+
+  </div><!-- end checkout-main -->
+
+  <!-- SIDEBAR -->
+  <div class="checkout-sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-header"><h3>Resumen de tu pedido</h3></div>
+      <div class="sidebar-kit">
+        <div class="sidebar-kit-icon" id="sb-icon">📦</div>
+        <div class="sidebar-kit-info">
+          <div class="sidebar-kit-name" id="sb-name">Exploración activa</div>
+          <div class="sidebar-kit-range" id="sb-range">6 — 12 meses</div>
+        </div>
+        <div class="sidebar-kit-price" id="sb-price">S/89</div>
+      </div>
+      <div class="sidebar-extras">
+        <div class="sidebar-extra">
+          <div class="sidebar-extra-label">🚚 Envío</div>
+          <div class="sidebar-extra-val free" id="sb-shipping">Gratis</div>
+        </div>
+        <div class="sidebar-extra">
+          <div class="sidebar-extra-label">📱 App incluida</div>
+          <div class="sidebar-extra-val free">Gratis</div>
+        </div>
+      </div>
+      <div class="sidebar-total">
+        <div class="sidebar-total-label">Total</div>
+        <div class="sidebar-total-amount" id="sb-total">S/89</div>
+      </div>
+      <div class="sidebar-includes">
+        <div class="si-item"><span class="si-icon">🧸</span>5–6 juguetes curados</div>
+        <div class="si-item"><span class="si-icon">📖</span>Guía de desarrollo incluida</div>
+        <div class="si-item"><span class="si-icon">📱</span>App de acompañamiento</div>
+        <div class="si-item"><span class="si-icon">🎥</span>Videos con pedagoga</div>
+      </div>
+      <div class="sidebar-trust">
+        <div class="trust-item">🛡️ Garantía de satisfacción</div>
+        <div class="trust-item">🔒 Pago 100% seguro</div>
+        <div class="trust-item">📦 Preparado en 2–3 días</div>
+        <div class="trust-item">↩️ Devolución fácil en 15 días</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end layout -->
+
+<script>
+// ─── STAGE DATA ───
+const stages = [
+  { range:"0 — 3 MESES", name:"Estimulación visual", desc:"Contraste y texturas para los primeros sentidos.", icon:"👁️", price:79, bg:"#E1F5EE",
+    toys:[
+      {e:"🖤",n:"Libro de contraste",a:"Estimulación visual"},
+      {e:"⚪",n:"Móvil blanco/negro",a:"Seguimiento visual"},
+      {e:"🔔",n:"Sonajero suave",a:"Coordinación auditiva"},
+      {e:"🧦",n:"Calcetines sensoriales",a:"Estimulación táctil"},
+      {e:"🪆",n:"Muñeco de tela",a:"Vínculo emocional"},
+      {e:"📖",n:"Libro de texturas",a:"Exploración sensorial"},
+    ]},
+  { range:"3 — 6 MESES", name:"Descubrimiento sensorial", desc:"Sonidos y colores que despiertan la curiosidad.", icon:"✋", price:85, bg:"#FFF0E8",
+    toys:[
+      {e:"🎯",n:"Sonajero de agarre",a:"Motricidad fina"},
+      {e:"🧶",n:"Cubo sensorial",a:"Exploración táctil"},
+      {e:"🪄",n:"Juguete mordedor",a:"Desarrollo oral"},
+      {e:"🔵",n:"Pelota texturas",a:"Coordinación táctil"},
+      {e:"🎵",n:"Piano de pies",a:"Causa y efecto"},
+      {e:"🪆",n:"Muñeco de tela",a:"Vínculo emocional"},
+    ]},
+  { range:"6 — 12 MESES", name:"Exploración activa", desc:"Coordinación, agarre y permanencia del objeto.", icon:"📦", price:89, bg:"#FFFBEB",
+    toys:[
+      {e:"🪆",n:"Encajable de formas",a:"Permanencia del objeto"},
+      {e:"📦",n:"Apiladora de aros",a:"Coordinación ojo-mano"},
+      {e:"🎲",n:"Cubo de actividades",a:"Exploración multisensorial"},
+      {e:"📖",n:"Libro de tela",a:"Lenguaje temprano"},
+      {e:"🔔",n:"Pelota sensorial",a:"Motricidad gruesa"},
+      {e:"🧸",n:"Juguete de arrastre",a:"Gateo y movimiento"},
+    ]},
+  { range:"1 — 2 AÑOS", name:"Primeros pasos", desc:"Equilibrio y habilidades motoras gruesas.", icon:"🚶", price:92, bg:"#FEF0F5",
+    toys:[
+      {e:"🚂",n:"Juguete de arrastre",a:"Marcha y equilibrio"},
+      {e:"🔨",n:"Banco de martillar",a:"Motricidad gruesa"},
+      {e:"🧩",n:"Puzzle grande",a:"Resolución de problemas"},
+      {e:"🏀",n:"Aro encestador",a:"Coordinación motora"},
+      {e:"🎨",n:"Juego de bloques",a:"Construcción creativa"},
+      {e:"📚",n:"Libros ilustrados",a:"Lenguaje y vocabulario"},
+    ]},
+  { range:"2 — 3 AÑOS", name:"Juego simbólico", desc:"Imaginación, lenguaje y habilidades sociales.", icon:"🧩", price:95, bg:"#EEF7F0",
+    toys:[
+      {e:"🎭",n:"Set de juego de roles",a:"Juego simbólico"},
+      {e:"🧱",n:"Bloques de construcción",a:"Lógica espacial"},
+      {e:"🖍️",n:"Crayones gruesos",a:"Expresión creativa"},
+      {e:"🍳",n:"Cocinita de juguete",a:"Imitación y creatividad"},
+      {e:"🎨",n:"Set de arte",a:"Motricidad fina"},
+      {e:"🏠",n:"Casa de muñecas",a:"Narrativa e imaginación"},
+    ]},
+];
+
+// ─── INIT ───
+const params = new URLSearchParams(window.location.search);
+const stageIdx = parseInt(params.get('stage') || '2');
+const stage = stages[stageIdx] || stages[2];
+let shippingCost = 0;
+let selectedPayment = 'tarjeta';
+let selectedShipping = 'estandar';
+
+function initPage() {
+  // kit card
+  document.getElementById('kit-icon').textContent = stage.icon;
+  document.getElementById('kit-icon').style.background = stage.bg;
+  document.getElementById('kit-range').textContent = stage.range;
+  document.getElementById('kit-name').textContent = stage.name;
+  document.getElementById('kit-desc').textContent = stage.desc;
+  document.getElementById('kit-price').textContent = 'S/' + stage.price;
+  // sidebar
+  document.getElementById('sb-icon').textContent = stage.icon;
+  document.getElementById('sb-icon').style.background = stage.bg;
+  document.getElementById('sb-name').textContent = stage.name;
+  document.getElementById('sb-range').textContent = stage.range.toLowerCase();
+  document.getElementById('sb-price').textContent = 'S/' + stage.price;
+  document.getElementById('sb-total').textContent = 'S/' + stage.price;
+  // build toys
+  buildToys();
+}
+
+function buildToys() {
+  const grid = document.getElementById('toys-grid');
+  grid.innerHTML = '';
+  stage.toys.forEach((t, i) => {
+    const div = document.createElement('div');
+    div.className = 'toy-option' + (i < 3 ? ' selected' : '');
+    div.innerHTML = `<div class="toy-check">✓</div><div class="toy-emoji">${t.e}</div><div class="toy-name">${t.n}</div><div class="toy-area">${t.a}</div>`;
+    div.onclick = () => toggleToy(div);
+    grid.appendChild(div);
+  });
+  updateCounter();
+}
+
+function toggleToy(el) {
+  const selected = document.querySelectorAll('.toy-option.selected');
+  if (el.classList.contains('selected')) {
+    if (selected.length <= 3) return; // min 3
+    el.classList.remove('selected');
+  } else {
+    if (selected.length >= 6) return; // max 6
+    el.classList.add('selected');
+  }
+  updateCounter();
+}
+
+function updateCounter() {
+  const n = document.querySelectorAll('.toy-option.selected').length;
+  document.getElementById('counter').textContent = n;
+  document.getElementById('btn-next-2').disabled = n < 3;
+}
+
+// ─── NAVIGATION ───
+let currentStep = 0;
+function goToStep(n) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('step-' + n).classList.add('active');
+  document.querySelectorAll('.step-item').forEach((s, i) => {
+    s.classList.remove('active','done');
+    if (i < n) s.classList.add('done');
+    if (i === n) s.classList.add('active');
+  });
+  currentStep = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── SHIPPING ───
+function selectShipping(el, type) {
+  document.querySelectorAll('.shipping-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedShipping = type;
+  shippingCost = type === 'express' ? 15 : type === 'provincia' ? 25 : 0;
+  const label = shippingCost === 0 ? 'Gratis' : 'S/' + shippingCost;
+  document.getElementById('sb-shipping').textContent = label;
+  document.getElementById('sb-shipping').className = 'sidebar-extra-val' + (shippingCost === 0 ? ' free' : '');
+  document.getElementById('sb-total').textContent = 'S/' + (stage.price + shippingCost);
+}
+
+function validateShipping() {
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const address = document.getElementById('f-address').value.trim();
+  if (!name || !email || !address) {
+    alert('Por favor completa los campos obligatorios: nombre, correo y dirección.');
+    return;
+  }
+  goToStep(3);
+}
+
+// ─── PAYMENT ───
+function selectPayment(el, type) {
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPayment = type;
+  ['tarjeta','yape','plin','transferencia'].forEach(t => {
+    const el = document.getElementById('pay-' + t);
+    if (el) el.style.display = t === type ? 'block' : 'none';
+  });
+  if (type === 'yape') document.getElementById('pay-yape').style.display = 'block';
+  if (type === 'plin') document.getElementById('pay-plin').style.display = 'block';
+}
+
+// ─── CARD FORMAT ───
+function formatCard(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+function formatExpiry(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,4);
+  if (v.length >= 2) v = v.slice(0,2) + '/' + v.slice(2);
+  el.value = v;
+}
+
+// ─── COMPLETE ───
+function completePurchase() {
+  const orderNum = 'LB-2026-' + String(Math.floor(Math.random()*9000)+1000);
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.step-item').forEach(s => s.classList.add('done'));
+  document.getElementById('success-screen').classList.add('active');
+  document.getElementById('success-order-num').textContent = 'Pedido #' + orderNum;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+initPage();
+</script>
+</body>
+</html>
