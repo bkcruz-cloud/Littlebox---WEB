@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LittleBox App</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --teal:#2D9B8A;--teal-l:#E1F5EE;--teal-d:#1a6b5e;
+  --coral:#E87B4A;--coral-l:#FFF0E8;
+  --yellow:#F5C842;--yellow-l:#FFFBEB;
+  --pink-l:#FEF0F5;--sage-l:#EEF7F0;
+  --cream:#FDFAF5;--sand:#F7F0E3;
+  --dk:#2C2C2A;--mid:#5C5C58;--lt:#9A9A94;
+  --purple:#7C4DFF;--purple-l:#EDE7FF;
+}
+body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;}
+.demo-label{font-family:'Nunito',sans-serif;font-weight:800;font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.26);margin-bottom:18px;text-align:center;}
+.phone-frame{width:375px;background:#18212e;border-radius:48px;padding:13px;box-shadow:0 40px 100px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.07);}
+.phone-screen{width:100%;height:720px;border-radius:36px;overflow:hidden;position:relative;background:var(--cream);}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:90px;height:26px;background:#18212e;border-radius:0 0 16px 16px;z-index:30;}
+.notch-pill{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:68px;height:5px;background:#111820;border-radius:3px;z-index:31;}
+.screen{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .22s ease;display:flex;flex-direction:column;background:var(--cream);}
+.screen.active{opacity:1;pointer-events:all;}
+.scroll-area{flex:1;overflow-y:auto;padding-bottom:68px;scrollbar-width:none;}
+.scroll-area::-webkit-scrollbar{display:none;}
+.tab-bar{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #EEE9E0;display:flex;padding:8px 0 10px;z-index:20;}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;transition:opacity .15s;}
+.tab-item:hover{opacity:.7;}
+.tab-icon{font-size:20px;line-height:1;}
+.tab-label{font-family:'Nunito',sans-serif;font-weight:700;font-size:.58rem;color:var(--lt);}
+.tab-item.active .tab-label{color:var(--teal);}
+.tab-dot{width:4px;height:4px;border-radius:50%;background:transparent;margin:0 auto;}
+.tab-item.active .tab-dot{background:var(--teal);}
+.app-header{background:var(--teal);padding:32px 20px 20px;position:relative;overflow:hidden;flex-shrink:0;}
+.hblob-a{position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.07);top:-70px;right:-60px;pointer-events:none;}
+.hblob-b{position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05);bottom:-40px;left:-30px;pointer-events:none;}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;position:relative;z-index:1;}
+.app-logo{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.1rem;color:#fff;}
+.app-logo em{color:var(--yellow);font-style:normal;}
+.header-right{display:flex;align-items:center;gap:8px;}
+.notif-btn{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;position:relative;border:none;}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--coral);border:2px solid var(--teal);}
+.header-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.28rem;color:#fff;line-height:1.2;margin-bottom:3px;position:relative;z-index:1;}
+.header-title em{color:var(--yellow);font-style:normal;}
+.header-sub{font-size:.78rem;color:rgba(255,255,255,.72);position:relative;z-index:1;}
+.section{padding:16px 16px 0;}
+.sec-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;color:var(--dk);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.sec-link{font-family:'Nunito',sans-serif;font-weight:700;font-size:.72rem;color:var(--teal);cursor:pointer;background:none;border:none;}
+.btn-coral{background:var(--coral);color:#fff;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.9rem;padding:14px;border-radius:50px;width:100%;box-shadow:0 5px 16px rgba(232,123,74,.32);transition:background .2s,transform .15s;}
+.btn-coral:hover{background:#d16a39;transform:translateY(-1px);}
+.btn-teal{background:var(--teal);color:#fff;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.9rem;padding:14px;border-radius:50px;width:100%;box-shadow:0 5px 16px rgba(45,155,138,.28);transition:background .2s,transform .15s;}
+.btn-teal:hover{background:var(--teal-d);transform:translateY(-1px);}
+.card{background:#fff;border-radius:16px;border:1.5px solid #F0EBE2;}
+
+/* ── STREAK BANNER ── */
+.streak-banner{background:linear-gradient(135deg,#7C4DFF,#5B35CC);border-radius:16px;padding:14px 16px;margin:14px 16px 0;cursor:pointer;transition:transform .15s;position:relative;}
+.streak-banner:hover{transform:translateY(-1px);}
+.streak-top{display:flex;gap:12px;align-items:center;margin-bottom:10px;}
+.streak-fire{font-size:28px;}
+.streak-body{flex:1;}
+.streak-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:.92rem;color:#fff;margin-bottom:2px;}
+.streak-sub{font-size:.72rem;color:rgba(255,255,255,.78);}
+.streak-days{background:rgba(255,255,255,.2);border-radius:10px;padding:6px 12px;text-align:center;}
+.streak-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.3rem;color:#fff;line-height:1;}
+.streak-lbl{font-family:'Nunito',sans-serif;font-weight:700;font-size:.55rem;color:rgba(255,255,255,.75);letter-spacing:.05em;}
+.streak-progress-wrap{background:rgba(255,255,255,.12);border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:10px;}
+.streak-prog-bar-bg{flex:1;height:6px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden;}
+.streak-prog-bar-fill{height:100%;border-radius:3px;background:var(--yellow);transition:width .4s ease;}
+.streak-prog-lbl{font-family:'Nunito',sans-serif;font-weight:700;font-size:.65rem;color:rgba(255,255,255,.85);white-space:nowrap;}
+.streak-action-feed{position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:#7C4DFF;color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;padding:4px 12px;border-radius:50px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .3s,top .3s;z-index:40;}
+.streak-action-feed.show{opacity:1;top:-36px;}
+.badges-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+.badges-row::-webkit-scrollbar{display:none;}
+.badge-pill{display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid #F0EBE2;border-radius:50px;padding:7px 12px;white-space:nowrap;flex-shrink:0;transition:border-color .2s,box-shadow .2s;}
+.badge-pill.earned{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(245,200,66,.18);}
+.badge-pill.locked{opacity:.45;filter:grayscale(.6);}
+.badge-icon{font-size:16px;}
+.badge-name{font-family:'Nunito',sans-serif;font-weight:800;font-size:.68rem;color:var(--dk);}
+.badge-name.locked-name{color:var(--lt);}
+.reward-overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:60;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
+.reward-overlay.open{opacity:1;pointer-events:all;}
+.reward-card{background:#fff;border-radius:28px;padding:32px 24px;width:290px;text-align:center;transform:scale(.85);transition:transform .3s;}
+.reward-overlay.open .reward-card{transform:scale(1);}
+.reward-emoji{font-size:52px;margin-bottom:12px;}
+.reward-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.2rem;color:var(--dk);margin-bottom:6px;}
+.reward-sub{font-size:.84rem;color:var(--mid);line-height:1.6;margin-bottom:20px;}
+.reward-code{background:var(--yellow-l);border:2px dashed var(--yellow);border-radius:12px;padding:10px 16px;font-family:'Nunito',sans-serif;font-weight:900;font-size:1.1rem;color:#5C3D00;letter-spacing:.1em;margin-bottom:20px;}
+.reward-btn{background:var(--coral);color:#fff;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.9rem;padding:13px 28px;border-radius:50px;}
+
+/* ── BABY CARD ── */
+.baby-card{background:#fff;border-radius:18px;border:1.5px solid #F0EBE2;padding:16px 18px;margin:16px 16px 0;}
+.bc-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.bc-avatar{width:46px;height:46px;border-radius:50%;background:var(--coral-l);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(232,123,74,.18);}
+.bc-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:.98rem;color:var(--dk);}
+.bc-age{font-size:.72rem;color:var(--mid);}
+.bc-badge{background:var(--teal-l);color:var(--teal-d);font-family:'Nunito',sans-serif;font-weight:800;font-size:.62rem;padding:3px 10px;border-radius:50px;letter-spacing:.04em;white-space:nowrap;}
+.bc-prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.bc-prog-lbl{font-family:'Nunito',sans-serif;font-weight:700;font-size:.72rem;color:var(--mid);}
+.bc-prog-pct{font-family:'Nunito',sans-serif;font-weight:900;font-size:.72rem;color:var(--teal);}
+.bc-bar{height:7px;background:var(--teal-l);border-radius:4px;overflow:hidden;}
+.bc-bar-fill{height:100%;width:65%;background:var(--teal);border-radius:4px;transition:width .4s ease;}
+
+/* ── LEVEL MAP ── */
+.level-map{background:#fff;border-radius:18px;border:1.5px solid #F0EBE2;padding:16px 18px;margin:14px 16px 0;}
+.lm-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;color:var(--dk);margin-bottom:14px;}
+.lm-path{display:flex;align-items:center;gap:0;}
+.lm-node{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;}
+.lm-circle{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:2.5px solid transparent;position:relative;}
+.lm-circle.done{background:var(--teal);border-color:var(--teal);}
+.lm-circle.current{background:var(--coral);border-color:var(--coral);box-shadow:0 0 0 4px rgba(232,123,74,.2);}
+.lm-circle.locked{background:#F0EBE2;border-color:#E5E0D8;}
+.lm-check{font-size:16px;}
+.lm-label{font-family:'Nunito',sans-serif;font-weight:700;font-size:.55rem;color:var(--lt);text-align:center;line-height:1.3;max-width:52px;}
+.lm-label.active-lbl{color:var(--coral);font-weight:800;}
+.lm-connector{flex:1;height:3px;border-radius:2px;margin-bottom:18px;}
+.lmc-done{background:var(--teal);}
+.lmc-mid{background:linear-gradient(to right,var(--teal),var(--coral));}
+.lmc-locked{background:#EEE9E0;border:1.5px dashed #D8D3CB;}
+.lm-next{background:var(--coral-l);border-radius:10px;padding:8px 12px;margin-top:10px;font-size:.72rem;color:var(--coral);font-family:'Nunito',sans-serif;font-weight:700;text-align:center;}
+
+/* ── NOTIF BANNER ── */
+.notif-banner{background:var(--coral);border-radius:16px;padding:14px 16px;margin:14px 16px 0;display:flex;gap:12px;align-items:center;cursor:pointer;transition:transform .15s;}
+.notif-banner:hover{transform:translateY(-1px);}
+.nb-icon{font-size:22px;flex-shrink:0;}
+.nb-body{flex:1;}
+.nb-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:.84rem;color:#fff;margin-bottom:2px;}
+.nb-sub{font-size:.7rem;color:rgba(255,255,255,.82);line-height:1.4;}
+.nb-arrow{font-size:18px;color:rgba(255,255,255,.6);}
+
+/* ── QUICK ACCESS ── */
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.qa-item{background:#fff;border-radius:14px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;border:1.5px solid #F0EBE2;}
+.qa-item:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.07);}
+.qa-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.qi-t{background:var(--teal-l);}.qi-c{background:var(--coral-l);}.qi-y{background:var(--yellow-l);}.qi-s{background:var(--sand);}
+.qa-lbl{font-family:'Nunito',sans-serif;font-weight:800;font-size:.6rem;color:var(--dk);text-align:center;line-height:1.3;}
+
+/* ── HITOS ── */
+.hito-item{background:#fff;border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:11px;border:1.5px solid #F0EBE2;margin-bottom:8px;transition:border-color .2s;}
+.hito-item:last-child{margin-bottom:0;}
+.hito-check{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid #EAE5DC;background:#fff;transition:all .2s;cursor:pointer;}
+.hito-check.done{background:var(--teal);border-color:var(--teal);color:#fff;}
+.hito-text{flex:1;}
+.hito-name{font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;color:var(--dk);}
+.hito-name.struck{color:var(--lt);text-decoration:line-through;}
+.hito-area{font-size:.68rem;color:var(--lt);}
+.hito-tag{font-family:'Nunito',sans-serif;font-weight:700;font-size:.62rem;padding:3px 8px;border-radius:50px;white-space:nowrap;}
+.tag-ok{background:var(--teal-l);color:var(--teal-d);}
+.tag-new{background:var(--coral-l);color:var(--coral);}
+.tag-warn{background:#FFF0E0;color:#C85000;}
+
+/* ── TOY CARD ── */
+.toy-card{background:#fff;border-radius:16px;border:1.5px solid #F0EBE2;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.toy-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.08);}
+.toy-top{background:var(--yellow-l);padding:18px 18px 14px;display:flex;gap:14px;align-items:center;}
+.toy-emoji{font-size:38px;}
+.toy-badge{display:inline-block;background:var(--yellow);color:#5C3D00;font-family:'Nunito',sans-serif;font-weight:800;font-size:.6rem;padding:2px 8px;border-radius:50px;margin-bottom:5px;}
+.toy-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:.96rem;color:var(--dk);margin-bottom:2px;}
+.toy-area-lbl{font-size:.72rem;color:var(--mid);}
+.toy-bottom{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;}
+.toy-tip{font-size:.74rem;color:var(--mid);line-height:1.5;flex:1;}
+.toy-btn{background:var(--coral);color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:.7rem;padding:8px 14px;border-radius:50px;border:none;cursor:pointer;white-space:nowrap;margin-left:12px;}
+
+/* ── KIT ITEMS ── */
+.kit-item{background:#fff;border-radius:16px;border:1.5px solid #F0EBE2;padding:14px 16px;display:flex;gap:14px;align-items:flex-start;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .2s;margin-bottom:10px;}
+.kit-item:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08);border-color:var(--teal-l);}
+.kit-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.kit-info{flex:1;}
+.kit-name{font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;color:var(--dk);margin-bottom:2px;}
+.kit-area{font-size:.72rem;color:var(--mid);margin-bottom:8px;}
+.kit-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.ktag{font-family:'Nunito',sans-serif;font-weight:700;font-size:.58rem;padding:2px 8px;border-radius:50px;}
+.kt-t{background:var(--teal-l);color:var(--teal-d);}
+.kt-c{background:var(--coral-l);color:var(--coral);}
+.kt-y{background:var(--yellow-l);color:#7A5C00;}
+/* Quick play ideas */
+.quick-play{background:var(--cream);border-radius:12px;padding:10px 12px;}
+.qp-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:.68rem;color:var(--teal);margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+.qp-list{display:flex;flex-direction:column;gap:5px;}
+.qp-item{display:flex;gap:7px;align-items:flex-start;font-size:.7rem;color:var(--mid);line-height:1.4;}
+.qp-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:.68rem;color:var(--teal);flex-shrink:0;margin-top:1px;}
+.kit-arrow{font-size:16px;color:var(--lt);flex-shrink:0;margin-top:2px;}
+
+/* ── AVANCE ── */
+.progress-ring-wrap{display:flex;flex-direction:column;align-items:center;padding:18px 16px 6px;}
+.prog-circle{position:relative;width:110px;height:110px;margin-bottom:10px;}
+.prog-circle svg{transform:rotate(-90deg);}
+.prog-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.prog-num-big{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.6rem;color:var(--teal);}
+.prog-num-lbl{font-family:'Nunito',sans-serif;font-weight:700;font-size:.62rem;color:var(--lt);}
+.prog-sub{font-size:.78rem;color:var(--mid);text-align:center;}
+.av-item{background:#fff;border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:11px;border:1.5px solid #F0EBE2;cursor:pointer;transition:border-color .2s;margin-bottom:8px;}
+.av-item:last-child{margin-bottom:0;}
+.av-item:hover{border-color:var(--teal-l);}
+.av-check{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid #EAE5DC;background:#fff;transition:all .2s;cursor:pointer;}
+.av-check.done{background:var(--teal);border-color:var(--teal);color:#fff;}
+.av-body{flex:1;}
+.av-name{font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;color:var(--dk);}
+.av-name.struck{color:var(--lt);text-decoration:line-through;}
+.av-area{font-size:.7rem;color:var(--lt);}
+.av-tag{font-family:'Nunito',sans-serif;font-weight:700;font-size:.62rem;padding:3px 8px;border-radius:50px;white-space:nowrap;}
+/* Alerta hito retrasado */
+.alert-banner{background:#FFF0E0;border:1.5px solid #FFD0A0;border-radius:14px;padding:13px 15px;margin:14px 16px 0;display:flex;gap:10px;align-items:flex-start;}
+.alert-icon{font-size:20px;flex-shrink:0;}
+.alert-body{}
+.alert-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;color:#C85000;margin-bottom:3px;}
+.alert-sub{font-size:.72rem;color:#8C4000;line-height:1.5;}
+.alert-btn{display:inline-block;margin-top:8px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;background:var(--coral);color:#fff;padding:6px 14px;border-radius:50px;border:none;cursor:pointer;}
+
+/* ── DIARIO ── */
+.diario-item{background:#fff;border-radius:16px;border:1.5px solid #F0EBE2;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.diario-item:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08);}
+.diario-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.diario-emoji{width:38px;height:38px;border-radius:10px;background:var(--teal-l);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.diario-meta{flex:1;}
+.diario-hito{font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;color:var(--dk);}
+.diario-date{font-size:.68rem;color:var(--lt);}
+.diario-note{font-size:.76rem;color:var(--mid);line-height:1.5;font-style:italic;}
+.diario-note::before{content:'"';} .diario-note::after{content:'"';}
+.diario-add{background:var(--teal-l);border:1.5px dashed var(--teal);border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-bottom:10px;transition:background .2s;}
+.diario-add:hover{background:#d0ede6;}
+.da-text{font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;color:var(--teal);}
+
+/* ── GUÍAS ── */
+.guias-tabs{display:flex;gap:8px;padding:14px 16px 0;flex-shrink:0;}
+.gtab{flex:1;padding:9px 6px;border-radius:50px;text-align:center;font-family:'Nunito',sans-serif;font-weight:700;font-size:.73rem;cursor:pointer;border:1.5px solid #EAE5DC;background:#fff;color:var(--mid);transition:all .2s;}
+.gtab.on{background:var(--teal);color:#fff;border-color:var(--teal);}
+.video-card{background:#fff;border-radius:16px;border:1.5px solid #F0EBE2;overflow:hidden;margin-bottom:10px;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.video-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08);}
+.video-thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:42px;position:relative;}
+.vt-bg-t{background:var(--teal-l);}.vt-bg-c{background:var(--coral-l);}.vt-bg-y{background:var(--yellow-l);}
+.video-play{position:absolute;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.video-info{padding:12px 14px;}
+.video-badge{display:inline-block;font-family:'Nunito',sans-serif;font-weight:800;font-size:.6rem;padding:2px 8px;border-radius:50px;margin-bottom:5px;}
+.vb-t{background:var(--teal-l);color:var(--teal-d);}.vb-c{background:var(--coral-l);color:var(--coral);}.vb-y{background:var(--yellow-l);color:#7A5C00;}
+.video-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:.86rem;color:var(--dk);margin-bottom:3px;}
+.video-meta{font-size:.7rem;color:var(--lt);}
+.art-item{background:#fff;border-radius:14px;border:1.5px solid #F0EBE2;padding:14px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:center;transition:transform .15s,border-color .2s;}
+.art-item:hover{transform:translateY(-1px);border-color:var(--teal-l);}
+.art-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.art-body{flex:1;}
+.art-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;color:var(--dk);margin-bottom:3px;}
+.art-meta{font-size:.7rem;color:var(--lt);}
+.art-arrow{font-size:16px;color:var(--lt);}
+
+/* ── ESPECIALISTAS ── */
+.esp-intro{background:var(--teal-l);border-radius:14px;padding:13px 15px;margin:14px 16px 0;font-size:.76rem;color:var(--teal-d);line-height:1.55;}
+.esp-intro strong{font-weight:800;}
+.esp-card{background:#fff;border-radius:16px;border:1.5px solid #F0EBE2;padding:16px;margin-bottom:10px;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.esp-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08);}
+.esp-top{display:flex;gap:12px;align-items:center;margin-bottom:12px;}
+.esp-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:900;font-size:.92rem;flex-shrink:0;}
+.ea-1{background:var(--teal-l);color:var(--teal-d);}
+.ea-2{background:#FFD6CC;color:#8B3A1F;}
+.ea-3{background:#FDEAB4;color:#7A5C00;}
+.ea-4{background:#F4D6E8;color:#8B2E5A;}
+.esp-name{font-family:'Nunito',sans-serif;font-weight:800;font-size:.86rem;color:var(--dk);margin-bottom:2px;}
+.esp-role{font-size:.72rem;color:var(--teal);font-weight:700;font-family:'Nunito',sans-serif;}
+.esp-spec{font-size:.7rem;color:var(--mid);margin-top:2px;}
+.esp-actions{display:flex;gap:8px;}
+.esp-btn{flex:1;padding:9px;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.72rem;text-align:center;cursor:pointer;transition:opacity .2s;border:none;}
+.esp-btn:hover{opacity:.85;}
+.eb-call{background:var(--teal-l);color:var(--teal-d);}
+.eb-map{background:var(--coral-l);color:var(--coral);}
+.eb-web{background:var(--sand);color:var(--mid);}
+.faq-item{background:#fff;border-radius:14px;border:1.5px solid #F0EBE2;overflow:hidden;margin-bottom:8px;}
+.faq-q{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;color:var(--dk);transition:background .2s;}
+.faq-q:hover{background:var(--cream);}
+.faq-chevron{font-size:14px;color:var(--lt);transition:transform .25s;}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;font-size:.76rem;color:var(--mid);line-height:1.6;}
+.faq-a-inner{padding:0 16px 13px;}
+.faq-item.open .faq-chevron{transform:rotate(180deg);}
+.faq-item.open .faq-a{max-height:120px;}
+
+/* MODAL */
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:50;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-sheet{background:#fff;border-radius:24px 24px 0 0;padding:24px 22px 32px;width:100%;transform:translateY(100%);transition:transform .3s ease;}
+.modal-overlay.open .modal-sheet{transform:translateY(0);}
+.modal-handle{width:36px;height:4px;border-radius:2px;background:#EAE5DC;margin:0 auto 18px;}
+.modal-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.1rem;color:var(--dk);margin-bottom:4px;}
+.modal-sub{font-size:.8rem;color:var(--mid);margin-bottom:18px;line-height:1.5;}
+.modal-textarea{width:100%;border:1.5px solid #EAE5DC;border-radius:14px;padding:12px 14px;font-family:'Nunito Sans',sans-serif;font-size:.86rem;color:var(--dk);resize:none;outline:none;height:90px;margin-bottom:14px;}
+.modal-textarea:focus{border-color:var(--teal);}
+.modal-close{position:absolute;top:18px;right:18px;font-size:20px;color:var(--lt);cursor:pointer;background:none;border:none;}
+</style>
+</head>
+<body>
+
+<div class="demo-label">LittleBox App · Demo completa v2</div>
+
+<div class="phone-frame">
+  <div class="notch"></div><div class="notch-pill"></div>
+  <div class="phone-screen">
+
+    <!-- ══════ SCREEN: HOME ══════ -->
+    <div class="screen active" id="sc-home">
+      <div class="app-header">
+        <div class="hblob-a"></div><div class="hblob-b"></div>
+        <div class="header-top">
+          <div class="app-logo">Little<em>Box</em></div>
+          <div class="header-right">
+            <button class="notif-btn">🔔<div class="notif-dot"></div></button>
+          </div>
+        </div>
+        <div class="header-title">Hola, <em>mamá de Sofía</em> 👋</div>
+        <div class="header-sub">Sofía tiene 8 meses hoy · Nivel 3 activo</div>
+      </div>
+      <div class="scroll-area">
+
+        <!-- RACHA -->
+        <div class="streak-banner" onclick="openStreakModal()">
+          <div class="streak-action-feed" id="streak-feed">+1 día 🔥</div>
+          <div class="streak-top">
+            <div class="streak-fire">🔥</div>
+            <div class="streak-body">
+              <div class="streak-title" id="streak-title">¡Llevas 12 días acompañando a Sofía!</div>
+              <div class="streak-sub">Marca un hito, escribe en el diario o ve un video para sumar hoy</div>
+            </div>
+            <div class="streak-days">
+              <div class="streak-num" id="streak-num">12</div>
+              <div class="streak-lbl">DÍAS</div>
+            </div>
+          </div>
+          <div class="streak-progress-wrap">
+            <div class="streak-prog-bar-bg">
+              <div class="streak-prog-bar-fill" id="streak-bar" style="width:40%"></div>
+            </div>
+            <div class="streak-prog-lbl" id="streak-prog-lbl">18 días para tu descuento 🎁</div>
+          </div>
+        </div>
+
+        <!-- INSIGNIAS -->
+        <div class="section" style="margin-top:14px;">
+          <div class="sec-title">Tus insignias <button class="sec-link" onclick="openStreakModal()">Ver todas →</button></div>
+          <div class="badges-row">
+            <div class="badge-pill earned"><div class="badge-icon">🌱</div><div class="badge-name">Primera semana</div></div>
+            <div class="badge-pill earned"><div class="badge-icon">📝</div><div class="badge-name">Primer recuerdo</div></div>
+            <div class="badge-pill earned"><div class="badge-icon">✅</div><div class="badge-name">Primer hito</div></div>
+            <div class="badge-pill locked"><div class="badge-icon">🔥</div><div class="badge-name locked-name">30 días</div></div>
+            <div class="badge-pill locked"><div class="badge-icon">🎁</div><div class="badge-name locked-name">Descuento 15%</div></div>
+          </div>
+        </div>
+
+        <!-- BABY CARD -->
+        <div class="baby-card">
+          <div class="bc-row">
+            <div class="bc-avatar">👶</div>
+            <div style="flex:1;">
+              <div class="bc-name">Sofía</div>
+              <div class="bc-age">8 meses y 12 días · 7.4 kg · 68 cm</div>
+            </div>
+            <div class="bc-badge">NIVEL 3</div>
+          </div>
+          <div class="bc-prog-row">
+            <div class="bc-prog-lbl">Hitos de esta semana</div>
+            <div class="bc-prog-pct" id="home-pct">65%</div>
+          </div>
+          <div class="bc-bar"><div class="bc-bar-fill" id="home-bar"></div></div>
+        </div>
+
+        <!-- MAPA DE NIVELES -->
+        <div class="level-map">
+          <div class="lm-title">Tu camino con LittleBox</div>
+          <div class="lm-path">
+            <div class="lm-node">
+              <div class="lm-circle done"><div class="lm-check">✓</div></div>
+              <div class="lm-label">0–3 m. Visual</div>
+            </div>
+            <div class="lm-connector lmc-done"></div>
+            <div class="lm-node">
+              <div class="lm-circle done"><div class="lm-check">✓</div></div>
+              <div class="lm-label">3–6 m. Sensorial</div>
+            </div>
+            <div class="lm-connector lmc-mid"></div>
+            <div class="lm-node">
+              <div class="lm-circle current"><div class="lm-check" style="font-size:18px;">📦</div></div>
+              <div class="lm-label active-lbl">6–12 m. Aquí</div>
+            </div>
+            <div class="lm-connector lmc-locked"></div>
+            <div class="lm-node">
+              <div class="lm-circle locked"><div class="lm-check" style="font-size:14px;color:#9A9A94;">🔒</div></div>
+              <div class="lm-label">1–2 a. Pasos</div>
+            </div>
+            <div class="lm-connector lmc-locked"></div>
+            <div class="lm-node">
+              <div class="lm-circle locked"><div class="lm-check" style="font-size:14px;color:#9A9A94;">🔒</div></div>
+              <div class="lm-label">2–3 a. Juego</div>
+            </div>
+          </div>
+          <div class="lm-next">🎯 En 18 días Sofía estará lista para el Nivel 4 — Primeros pasos</div>
+        </div>
+
+        <!-- NOTIF -->
+        <div class="notif-banner" onclick="switchTab('avance')">
+          <div class="nb-icon">⭐</div>
+          <div class="nb-body">
+            <div class="nb-title">¡Sofía cumple 9 meses en 18 días!</div>
+            <div class="nb-sub">Revisa los nuevos hitos que la esperan.</div>
+          </div>
+          <div class="nb-arrow">›</div>
+        </div>
+
+        <!-- ACCESO RÁPIDO -->
+        <div class="section" style="margin-top:16px;">
+          <div class="sec-title">Acceso rápido</div>
+          <div class="quick-grid">
+            <div class="qa-item" onclick="switchTab('kit')"><div class="qa-icon qi-t">🧸</div><div class="qa-lbl">Mi Kit</div></div>
+            <div class="qa-item" onclick="switchTab('avance')"><div class="qa-icon qi-c">📋</div><div class="qa-lbl">Avance</div></div>
+            <div class="qa-item" onclick="switchTab('guias')"><div class="qa-icon qi-y">🎥</div><div class="qa-lbl">Guías</div></div>
+            <div class="qa-item" onclick="switchTab('especialistas')"><div class="qa-icon qi-s">👩‍⚕️</div><div class="qa-lbl">Especialistas</div></div>
+          </div>
+        </div>
+
+        <!-- HITOS -->
+        <div class="section">
+          <div class="sec-title">Hitos de esta semana <button class="sec-link" onclick="switchTab('avance')">Ver todos →</button></div>
+          <div>
+            <div class="hito-item"><div class="hito-check done" onclick="toggleH(this)">✓</div><div class="hito-text"><div class="hito-name struck">Busca objeto escondido</div><div class="hito-area">Permanencia del objeto</div></div><div class="hito-tag tag-ok">Logrado</div></div>
+            <div class="hito-item"><div class="hito-check done" onclick="toggleH(this)">✓</div><div class="hito-text"><div class="hito-name struck">Dice "mamá" o "papá"</div><div class="hito-area">Lenguaje temprano</div></div><div class="hito-tag tag-ok">Logrado</div></div>
+            <div class="hito-item"><div class="hito-check" onclick="toggleH(this)"></div><div class="hito-text"><div class="hito-name">Aplaude con ayuda</div><div class="hito-area">Coordinación bilateral</div></div><div class="hito-tag tag-new">Pendiente</div></div>
+            <div class="hito-item"><div class="hito-check" onclick="toggleH(this)"></div><div class="hito-text"><div class="hito-name">Se pone de pie agarrada</div><div class="hito-area">Desarrollo motor</div></div><div class="hito-tag tag-new">Pendiente</div></div>
+          </div>
+        </div>
+
+        <!-- JUGUETE DEL DÍA -->
+        <div class="section" style="padding-bottom:18px;">
+          <div class="sec-title">Juguete de hoy <button class="sec-link" onclick="switchTab('kit')">Ver mi kit →</button></div>
+          <div class="toy-card" onclick="switchTab('kit')">
+            <div class="toy-top"><div class="toy-emoji">📦</div><div><div class="toy-badge">✦ Recomendado hoy</div><div class="toy-name">Apiladora de aros</div><div class="toy-area-lbl">Coordinación ojo-mano · Permanencia</div></div></div>
+            <div class="toy-bottom"><div class="toy-tip">Ideal para los 8 meses. Trabaja el agarre y la concentración.</div><button class="toy-btn">Ver cómo →</button></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item active" onclick="switchTab('home')"><div class="tab-icon">🏠</div><div class="tab-label">Inicio</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('kit')"><div class="tab-icon">🧸</div><div class="tab-label">Mi Kit</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('avance')"><div class="tab-icon">📋</div><div class="tab-label">Avance</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('guias')"><div class="tab-icon">🎥</div><div class="tab-label">Guías</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('especialistas')"><div class="tab-icon">👩‍⚕️</div><div class="tab-label">Especialistas</div><div class="tab-dot"></div></div>
+      </div>
+    </div>
+
+    <!-- ══════ SCREEN: MI KIT ══════ -->
+    <div class="screen" id="sc-kit">
+      <div class="app-header">
+        <div class="hblob-a"></div><div class="hblob-b"></div>
+        <div class="header-top"><div class="app-logo">Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
+        <div class="header-title">Mi Kit</div>
+        <div class="header-sub">Nivel 3 · Exploración activa · 6 juguetes</div>
+      </div>
+      <div class="scroll-area">
+        <div class="section" style="margin-top:16px;padding-bottom:18px;">
+          <div class="sec-title">Juguetes · toca para ver ideas de juego</div>
+          <div>
+
+            <div class="kit-item">
+              <div class="kit-icon" style="background:var(--teal-l)">📦</div>
+              <div class="kit-info">
+                <div class="kit-name">Apiladora de aros</div>
+                <div class="kit-area">Coordinación ojo-mano · Permanencia</div>
+                <div class="kit-tags"><span class="ktag kt-t">Video incluido</span><span class="ktag kt-y">Favorito</span></div>
+                <div class="quick-play">
+                  <div class="qp-title">⚡ ¿Cómo juego con esto ahora?</div>
+                  <div class="qp-list">
+                    <div class="qp-item"><div class="qp-num">1</div>Apila los aros de mayor a menor frente a ella y derrúmbalos — ella reirá y querrá repetir.</div>
+                    <div class="qp-item"><div class="qp-num">2</div>Escóndela bajo una tela y pregunta "¿dónde está?" — trabaja la permanencia del objeto.</div>
+                    <div class="qp-item"><div class="qp-num">3</div>Deja que agarre el aro más grande y lo golpee — desarrolla el agarre palmar.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="kit-item">
+              <div class="kit-icon" style="background:var(--coral-l)">🎲</div>
+              <div class="kit-info">
+                <div class="kit-name">Cubo de actividades</div>
+                <div class="kit-area">Exploración multisensorial</div>
+                <div class="kit-tags"><span class="ktag kt-t">Video incluido</span></div>
+                <div class="quick-play">
+                  <div class="qp-title">⚡ ¿Cómo juego con esto ahora?</div>
+                  <div class="qp-list">
+                    <div class="qp-item"><div class="qp-num">1</div>Haz sonar cada panel y nómbralo: "mira, hace clic" — conecta acción con lenguaje.</div>
+                    <div class="qp-item"><div class="qp-num">2</div>Pon su mano en la textura rugosa, luego en la suave — contraste sensorial.</div>
+                    <div class="qp-item"><div class="qp-num">3</div>Gíralo y deja que explore sola — respeta los tiempos de atención de 2–3 min.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="kit-item">
+              <div class="kit-icon" style="background:var(--yellow-l)">📖</div>
+              <div class="kit-info">
+                <div class="kit-name">Libro de tela</div>
+                <div class="kit-area">Lenguaje temprano · Texturas</div>
+                <div class="kit-tags"><span class="ktag kt-c">Recomendado</span></div>
+                <div class="quick-play">
+                  <div class="qp-title">⚡ ¿Cómo juego con esto ahora?</div>
+                  <div class="qp-list">
+                    <div class="qp-item"><div class="qp-num">1</div>Léelo en voz alta exagerando las vocales — el ritmo del habla estimula el lenguaje.</div>
+                    <div class="qp-item"><div class="qp-num">2</div>Señala cada imagen y espera su reacción antes de pasar la página.</div>
+                    <div class="qp-item"><div class="qp-num">3</div>Deja que ella dé vuelta las páginas sola — trabaja la motricidad fina.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="kit-item">
+              <div class="kit-icon" style="background:var(--pink-l)">🔔</div>
+              <div class="kit-info">
+                <div class="kit-name">Pelota sensorial</div>
+                <div class="kit-area">Motricidad gruesa · Gateo</div>
+                <div class="kit-tags"><span class="ktag kt-t">Video incluido</span></div>
+                <div class="quick-play">
+                  <div class="qp-title">⚡ ¿Cómo juego con esto ahora?</div>
+                  <div class="qp-list">
+                    <div class="qp-item"><div class="qp-num">1</div>Ruédala lentamente frente a ella para que la persiga gateando.</div>
+                    <div class="qp-item"><div class="qp-num">2</div>Ponla sobre su panza boca abajo — trabaja el tono muscular del cuello.</div>
+                    <div class="qp-item"><div class="qp-num">3</div>Apriétala suavemente en su mano y suéltala — reflejo de agarre.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item" onclick="switchTab('home')"><div class="tab-icon">🏠</div><div class="tab-label">Inicio</div><div class="tab-dot"></div></div>
+        <div class="tab-item active" onclick="switchTab('kit')"><div class="tab-icon">🧸</div><div class="tab-label">Mi Kit</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('avance')"><div class="tab-icon">📋</div><div class="tab-label">Avance</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('guias')"><div class="tab-icon">🎥</div><div class="tab-label">Guías</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('especialistas')"><div class="tab-icon">👩‍⚕️</div><div class="tab-label">Especialistas</div><div class="tab-dot"></div></div>
+      </div>
+    </div>
+
+    <!-- ══════ SCREEN: AVANCE ══════ -->
+    <div class="screen" id="sc-avance">
+      <div class="app-header">
+        <div class="hblob-a"></div><div class="hblob-b"></div>
+        <div class="header-top"><div class="app-logo">Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
+        <div class="header-title">Avance de Sofía</div>
+        <div class="header-sub">Semana 34 · Nivel 3 · 6–12 meses</div>
+      </div>
+      <div class="scroll-area">
+
+        <!-- RING -->
+        <div class="progress-ring-wrap">
+          <div class="prog-circle">
+            <svg width="110" height="110" viewBox="0 0 110 110">
+              <circle cx="55" cy="55" r="46" fill="none" stroke="#E1F5EE" stroke-width="10"/>
+              <circle id="prog-ring" cx="55" cy="55" r="46" fill="none" stroke="#2D9B8A" stroke-width="10" stroke-linecap="round" stroke-dasharray="289" stroke-dashoffset="101"/>
+            </svg>
+            <div class="prog-num"><div class="prog-num-big" id="av-pct">65%</div><div class="prog-num-lbl">logrado</div></div>
+          </div>
+          <div class="prog-sub" id="av-sub">Sofía completó <strong>5 de 8</strong> hitos de esta etapa</div>
+        </div>
+
+        <!-- ALERTA HITO RETRASADO -->
+        <div class="alert-banner">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-body">
+            <div class="alert-title">Un hito merece atención</div>
+            <div class="alert-sub">"Imita gestos simples" suele alcanzarse entre los 7–9 meses. Sofía tiene 8 meses. Si no lo ves aún, puede ser útil consultar con un especialista.</div>
+            <button class="alert-btn" onclick="switchTab('especialistas')">Ver especialistas →</button>
+          </div>
+        </div>
+
+        <!-- HITOS -->
+        <div class="section">
+          <div class="sec-title">Hitos de esta etapa</div>
+          <div>
+            <div class="av-item"><div class="av-check done" onclick="toggleAv(this)">✓</div><div class="av-body"><div class="av-name struck">Busca objeto escondido</div><div class="av-area">Permanencia del objeto</div></div><div class="av-tag tag-ok">Logrado</div></div>
+            <div class="av-item"><div class="av-check done" onclick="toggleAv(this)">✓</div><div class="av-body"><div class="av-name struck">Dice "mamá" o "papá"</div><div class="av-area">Lenguaje temprano</div></div><div class="av-tag tag-ok">Logrado</div></div>
+            <div class="av-item"><div class="av-check done" onclick="toggleAv(this)">✓</div><div class="av-body"><div class="av-name struck">Agarra objetos pequeños</div><div class="av-area">Pinza digital</div></div><div class="av-tag tag-ok">Logrado</div></div>
+            <div class="av-item"><div class="av-check done" onclick="toggleAv(this)">✓</div><div class="av-body"><div class="av-name struck">Gatea sin ayuda</div><div class="av-area">Motricidad gruesa</div></div><div class="av-tag tag-ok">Logrado</div></div>
+            <div class="av-item"><div class="av-check done" onclick="toggleAv(this)">✓</div><div class="av-body"><div class="av-name struck">Come con cuchara con ayuda</div><div class="av-area">Autonomía temprana</div></div><div class="av-tag tag-ok">Logrado</div></div>
+            <div class="av-item"><div class="av-check" onclick="toggleAv(this)"></div><div class="av-body"><div class="av-name">Aplaude con ayuda</div><div class="av-area">Coordinación bilateral</div></div><div class="av-tag tag-new">Pendiente</div></div>
+            <div class="av-item"><div class="av-check" onclick="toggleAv(this)"></div><div class="av-body"><div class="av-name">Se pone de pie agarrada</div><div class="av-area">Desarrollo motor</div></div><div class="av-tag tag-new">Pendiente</div></div>
+            <div class="av-item"><div class="av-check" onclick="toggleAv(this)"></div><div class="av-body"><div class="av-name">Imita gestos simples</div><div class="av-area">Comunicación gestual</div></div><div class="av-tag tag-warn">⚠ Revisar</div></div>
+          </div>
+        </div>
+
+        <!-- DIARIO DEL BEBÉ -->
+        <div class="section" style="padding-bottom:18px;">
+          <div class="sec-title">Diario de Sofía <button class="sec-link" onclick="openDiario()">+ Agregar</button></div>
+          <div class="diario-add" onclick="openDiario()">
+            <span style="font-size:20px;">📝</span>
+            <div class="da-text">Registra un momento especial de hoy</div>
+          </div>
+          <div class="diario-item">
+            <div class="diario-header">
+              <div class="diario-emoji">🎉</div>
+              <div class="diario-meta">
+                <div class="diario-hito">Gateó sola por primera vez</div>
+                <div class="diario-date">14 nov 2025 · hace 12 días</div>
+              </div>
+            </div>
+            <div class="diario-note">¡No lo podíamos creer! Estiró los brazos hacia el osito y de pronto empezó a moverse sola. Papá lloró 🥺</div>
+          </div>
+          <div class="diario-item">
+            <div class="diario-header">
+              <div class="diario-emoji">💬</div>
+              <div class="diario-meta">
+                <div class="diario-hito">Dijo "mamá" por primera vez</div>
+                <div class="diario-date">8 nov 2025 · hace 18 días</div>
+              </div>
+            </div>
+            <div class="diario-note">Estaba llorando y de pronto me miró y dijo clarísimo mamá. Mi corazón explotó.</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item" onclick="switchTab('home')"><div class="tab-icon">🏠</div><div class="tab-label">Inicio</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('kit')"><div class="tab-icon">🧸</div><div class="tab-label">Mi Kit</div><div class="tab-dot"></div></div>
+        <div class="tab-item active" onclick="switchTab('avance')"><div class="tab-icon">📋</div><div class="tab-label">Avance</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('guias')"><div class="tab-icon">🎥</div><div class="tab-label">Guías</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('especialistas')"><div class="tab-icon">👩‍⚕️</div><div class="tab-label">Especialistas</div><div class="tab-dot"></div></div>
+      </div>
+    </div>
+
+    <!-- ══════ SCREEN: GUÍAS ══════ -->
+    <div class="screen" id="sc-guias">
+      <div class="app-header">
+        <div class="hblob-a"></div><div class="hblob-b"></div>
+        <div class="header-top"><div class="app-logo">Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
+        <div class="header-title">Guías y contenido</div>
+        <div class="header-sub">Videos · artículos · tips de crianza</div>
+      </div>
+      <div class="guias-tabs">
+        <div class="gtab on" id="gtab-v" onclick="switchGuiasTab('v')">Videos</div>
+        <div class="gtab" id="gtab-a" onclick="switchGuiasTab('a')">Artículos</div>
+        <div class="gtab" id="gtab-t" onclick="switchGuiasTab('t')">Tips</div>
+      </div>
+      <div class="scroll-area" style="padding-top:14px;">
+        <div id="guias-videos">
+          <div class="section" style="padding-top:0;padding-bottom:18px;">
+            <div class="video-card" onclick="addStreakDay('Video visto');this.style.borderColor='var(--teal)'"><div class="video-thumb vt-bg-t">📦<div class="video-play">▶</div></div><div class="video-info"><div class="video-badge vb-t">Juguetes · 4 min</div><div class="video-title">Cómo usar la apiladora de aros</div><div class="video-meta">Con Andrea Palomino · Pedagoga Montessori</div></div></div>
+            <div class="video-card" onclick="addStreakDay('Video visto');this.style.borderColor='var(--teal)'"><div class="video-thumb vt-bg-c">🎲<div class="video-play">▶</div></div><div class="video-info"><div class="video-badge vb-c">Juguetes · 5 min</div><div class="video-title">El cubo de actividades paso a paso</div><div class="video-meta">Con Dra. Valentina Torres · T. Ocupacional</div></div></div>
+            <div class="video-card" onclick="addStreakDay('Video visto');this.style.borderColor='var(--teal)'"><div class="video-thumb vt-bg-y">🧠<div class="video-play">▶</div></div><div class="video-info"><div class="video-badge vb-y">Desarrollo · 7 min</div><div class="video-title">Permanencia del objeto: qué es y por qué importa</div><div class="video-meta">Con Lic. Carmen Restrepo · Psicóloga</div></div></div>
+          </div>
+        </div>
+        <div id="guias-articulos" style="display:none;">
+          <div class="section" style="padding-top:0;padding-bottom:18px;">
+            <div class="art-item"><div class="art-icon" style="background:var(--teal-l)">📚</div><div class="art-body"><div class="art-title">El gateo y su importancia en el desarrollo cerebral</div><div class="art-meta">5 min · Desarrollo motor</div></div><div class="art-arrow">›</div></div>
+            <div class="art-item"><div class="art-icon" style="background:var(--coral-l)">💬</div><div class="art-body"><div class="art-title">Primeras palabras: cuándo preocuparse y cuándo no</div><div class="art-meta">4 min · Lenguaje</div></div><div class="art-arrow">›</div></div>
+            <div class="art-item"><div class="art-icon" style="background:var(--yellow-l)">🍎</div><div class="art-body"><div class="art-title">Introducción a sólidos: guía para los 8 meses</div><div class="art-meta">6 min · Alimentación</div></div><div class="art-arrow">›</div></div>
+            <div class="art-item"><div class="art-icon" style="background:var(--sand)">😴</div><div class="art-body"><div class="art-title">Regresión del sueño a los 8–10 meses</div><div class="art-meta">5 min · Sueño</div></div><div class="art-arrow">›</div></div>
+          </div>
+        </div>
+        <div id="guias-tips" style="display:none;">
+          <div class="section" style="padding-top:0;padding-bottom:18px;">
+            <div class="art-item"><div class="art-icon" style="background:var(--teal-l)">💡</div><div class="art-body"><div class="art-title">Tip de la semana: escóndete y vuelve aparecer</div><div class="art-meta">Estimula la permanencia del objeto</div></div><div class="art-arrow">›</div></div>
+            <div class="art-item"><div class="art-icon" style="background:var(--coral-l)">🎵</div><div class="art-body"><div class="art-title">Canciones que estimulan el lenguaje</div><div class="art-meta">Crianza consciente</div></div><div class="art-arrow">›</div></div>
+            <div class="art-item"><div class="art-icon" style="background:var(--yellow-l)">🤲</div><div class="art-body"><div class="art-title">Masaje infantil para mejorar el vínculo</div><div class="art-meta">Apego seguro</div></div><div class="art-arrow">›</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item" onclick="switchTab('home')"><div class="tab-icon">🏠</div><div class="tab-label">Inicio</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('kit')"><div class="tab-icon">🧸</div><div class="tab-label">Mi Kit</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('avance')"><div class="tab-icon">📋</div><div class="tab-label">Avance</div><div class="tab-dot"></div></div>
+        <div class="tab-item active" onclick="switchTab('guias')"><div class="tab-icon">🎥</div><div class="tab-label">Guías</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('especialistas')"><div class="tab-icon">👩‍⚕️</div><div class="tab-label">Especialistas</div><div class="tab-dot"></div></div>
+      </div>
+    </div>
+
+    <!-- ══════ SCREEN: ESPECIALISTAS ══════ -->
+    <div class="screen" id="sc-especialistas">
+      <div class="app-header">
+        <div class="hblob-a"></div><div class="hblob-b"></div>
+        <div class="header-top"><div class="app-logo">Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
+        <div class="header-title">Especialistas</div>
+        <div class="header-sub">Directorio · Preguntas frecuentes</div>
+      </div>
+      <div class="scroll-area">
+        <div class="esp-intro"><strong>Directorio de contacto.</strong> Estos especialistas están afiliados a LittleBox. Contáctalos directamente — sin chat en tiempo real.</div>
+        <div class="section">
+          <div class="sec-title">Nuestros especialistas</div>
+          <div>
+            <div class="esp-card"><div class="esp-top"><div class="esp-avatar ea-1">MD</div><div><div class="esp-name">Dra. María Elena Domínguez</div><div class="esp-role">Pediatra del Desarrollo</div><div class="esp-spec">18 años · Neurodesarrollo infantil</div></div></div><div class="esp-actions"><button class="esp-btn eb-call">📞 Llamar</button><button class="esp-btn eb-map">📍 Ubicación</button><button class="esp-btn eb-web">🌐 Web</button></div></div>
+            <div class="esp-card"><div class="esp-top"><div class="esp-avatar ea-2">CR</div><div><div class="esp-name">Lic. Carmen Restrepo</div><div class="esp-role">Psicóloga Infantil</div><div class="esp-spec">Apego seguro · Neurodesarrollo</div></div></div><div class="esp-actions"><button class="esp-btn eb-call">📞 Llamar</button><button class="esp-btn eb-map">📍 Ubicación</button><button class="esp-btn eb-web">🌐 Web</button></div></div>
+            <div class="esp-card"><div class="esp-top"><div class="esp-avatar ea-3">AP</div><div><div class="esp-name">Prof. Andrea Palomino</div><div class="esp-role">Pedagoga Montessori</div><div class="esp-spec">Estimulación temprana · Minedu</div></div></div><div class="esp-actions"><button class="esp-btn eb-call">📞 Llamar</button><button class="esp-btn eb-map">📍 Ubicación</button><button class="esp-btn eb-web">🌐 Web</button></div></div>
+            <div class="esp-card"><div class="esp-top"><div class="esp-avatar ea-4">VT</div><div><div class="esp-name">Dra. Valentina Torres</div><div class="esp-role">Terapeuta Ocupacional</div><div class="esp-spec">Integración sensorial · Motor fino</div></div></div><div class="esp-actions"><button class="esp-btn eb-call">📞 Llamar</button><button class="esp-btn eb-map">📍 Ubicación</button><button class="esp-btn eb-web">🌐 Web</button></div></div>
+          </div>
+        </div>
+        <div class="section" style="padding-bottom:18px;">
+          <div class="sec-title">Preguntas frecuentes</div>
+          <div>
+            <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">¿Cómo sé si mi bebé va bien?<span class="faq-chevron">▾</span></div><div class="faq-a"><div class="faq-a-inner">Los hitos son una guía basada en rangos normales. Si algo te preocupa, consulta con un pediatra. La app no reemplaza una evaluación profesional.</div></div></div>
+            <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">¿Cómo activo el siguiente nivel?<span class="faq-chevron">▾</span></div><div class="faq-a"><div class="faq-a-inner">Compra el kit de la siguiente etapa en nuestra web. Recibirás un nuevo código que al ingresarlo desbloqueará el nivel correspondiente.</div></div></div>
+            <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">¿Pierdo el acceso al nivel anterior?<span class="faq-chevron">▾</span></div><div class="faq-a"><div class="faq-a-inner">No. Los niveles que ya pagaste siempre están disponibles. Solo agregas acceso al nuevo nivel.</div></div></div>
+            <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">¿Qué hago si no encuentro mi código?<span class="faq-chevron">▾</span></div><div class="faq-a"><div class="faq-a-inner">Si compraste online, revisa tu correo de confirmación. Si fue físico, el código está en una tarjeta dentro del paquete. Escríbenos a soporte@littlebox.pe</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item" onclick="switchTab('home')"><div class="tab-icon">🏠</div><div class="tab-label">Inicio</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('kit')"><div class="tab-icon">🧸</div><div class="tab-label">Mi Kit</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('avance')"><div class="tab-icon">📋</div><div class="tab-label">Avance</div><div class="tab-dot"></div></div>
+        <div class="tab-item" onclick="switchTab('guias')"><div class="tab-icon">🎥</div><div class="tab-label">Guías</div><div class="tab-dot"></div></div>
+        <div class="tab-item active" onclick="switchTab('especialistas')"><div class="tab-icon">👩‍⚕️</div><div class="tab-label">Especialistas</div><div class="tab-dot"></div></div>
+      </div>
+    </div>
+
+    <!-- MODAL RACHA / INSIGNIAS -->
+    <div class="reward-overlay" id="modal-streak">
+      <div class="reward-card" id="reward-card-content">
+        <div class="reward-emoji">🔥</div>
+        <div class="reward-title">Tu racha de acompañamiento</div>
+        <div class="reward-sub">Cada vez que marcas un hito, escribes en el diario o ves un video, sumas un día a tu racha.</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;text-align:left;">
+          <div style="background:#F7F0E3;border-radius:12px;padding:10px 14px;display:flex;gap:10px;align-items:center;">
+            <span style="font-size:20px;">🌱</span><div><div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;color:#2C2C2A;">7 días → Artículo exclusivo</div><div style="font-size:.7rem;color:#5C5C58;">Contenido premium desbloqueado ✓</div></div>
+          </div>
+          <div style="background:#F7F0E3;border-radius:12px;padding:10px 14px;display:flex;gap:10px;align-items:center;">
+            <span style="font-size:20px;">🏅</span><div><div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;color:#2C2C2A;">15 días → Video exclusivo de la pedagoga</div><div style="font-size:.7rem;color:#9A9A94;">3 días más para desbloquearlo</div></div>
+          </div>
+          <div style="background:#FFF0E8;border-radius:12px;padding:10px 14px;display:flex;gap:10px;align-items:center;border:1.5px solid #FFD0A0;">
+            <span style="font-size:20px;">🎁</span><div><div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;color:#E87B4A;">30 días → 15% de descuento en tu próximo kit</div><div style="font-size:.7rem;color:#5C5C58;">18 días más para ganarlo</div></div>
+          </div>
+        </div>
+        <button class="reward-btn" onclick="closeStreakModal()">¡A seguir! 🚀</button>
+      </div>
+    </div>
+
+    <!-- MODAL RECOMPENSA DESBLOQUEADA -->
+    <div class="reward-overlay" id="modal-reward">
+      <div class="reward-card">
+        <div class="reward-emoji">🎁</div>
+        <div class="reward-title">¡Ganaste un descuento!</div>
+        <div class="reward-sub">Llevas 30 días acompañando a Sofía. Este es tu regalo por la constancia.</div>
+        <div class="reward-code">SOFIA30</div>
+        <button class="reward-btn" onclick="closeRewardModal()">Usar en mi próximo kit →</button>
+      </div>
+    </div>
+
+    <!-- MODAL DIARIO -->
+    <div class="modal-overlay" id="modal-diario">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <button class="modal-close" onclick="closeDiario()">✕</button>
+        <div class="modal-title">Registrar un momento 📝</div>
+        <div class="modal-sub">¿Qué logró Sofía hoy? Guárdalo para siempre.</div>
+        <textarea class="modal-textarea" id="diario-input" placeholder="Ej: Hoy agarró el juguete con los dos manos y no lo soltó. ¡Orgullosa!"></textarea>
+        <button class="btn-coral" onclick="saveDiario()">Guardar momento →</button>
+      </div>
+    </div>
+
+  </div><!-- phone-screen -->
+</div><!-- phone-frame -->
+
+<div style="margin-top:16px;text-align:center;font-family:'Nunito',sans-serif;font-weight:600;font-size:.67rem;color:rgba(255,255,255,.17);">Navega por los 5 tabs · Marca hitos · Abre el diario · Despliega las FAQ</div>
+
+<script>
+const tabMap={home:'sc-home',kit:'sc-kit',avance:'sc-avance',guias:'sc-guias',especialistas:'sc-especialistas'};
+let curTab='home';
+
+/* ── STREAK SYSTEM ── */
+let streakDays = 12;
+let actionDoneToday = false;
+const NEXT_REWARD_AT = 30;
+const BADGE_MILESTONES = [
+  {days:7, icon:'🌱', name:'Primera semana', earned:true},
+  {days:10, icon:'📝', name:'Primer recuerdo', earned:true},
+  {days:12, icon:'✅', name:'Primer hito', earned:true},
+  {days:30, icon:'🔥', name:'30 días', earned:false},
+  {days:30, icon:'🎁', name:'Descuento 15%', earned:false},
+];
+
+function addStreakDay(actionLabel) {
+  if(actionDoneToday) return;
+  actionDoneToday = true;
+  streakDays++;
+  updateStreakUI();
+  showFeed(actionLabel);
+  if(streakDays === NEXT_REWARD_AT) {
+    setTimeout(() => openRewardModal(), 1200);
+  }
+}
+
+function updateStreakUI() {
+  document.getElementById('streak-num').textContent = streakDays;
+  document.getElementById('streak-title').textContent = `¡Llevas ${streakDays} días acompañando a Sofía!`;
+  const remaining = NEXT_REWARD_AT - streakDays;
+  const pct = Math.min(100, (streakDays / NEXT_REWARD_AT) * 100);
+  document.getElementById('streak-bar').style.width = pct + '%';
+  document.getElementById('streak-prog-lbl').textContent = remaining > 0
+    ? `${remaining} días para tu descuento 🎁`
+    : '¡Descuento desbloqueado! 🎁';
+}
+
+function showFeed(label) {
+  const feed = document.getElementById('streak-feed');
+  feed.textContent = label + ' +1 día 🔥';
+  feed.classList.add('show');
+  setTimeout(() => feed.classList.remove('show'), 2200);
+}
+
+function openStreakModal() { document.getElementById('modal-streak').classList.add('open'); }
+function closeStreakModal() { document.getElementById('modal-streak').classList.remove('open'); }
+function openRewardModal() { document.getElementById('modal-reward').classList.add('open'); }
+function closeRewardModal() { document.getElementById('modal-reward').classList.remove('open'); }
+
+function switchTab(tab){
+  if(tab===curTab)return;
+  document.getElementById(tabMap[curTab]).classList.remove('active');
+  document.getElementById(tabMap[tab]).classList.add('active');
+  curTab=tab;
+}
+
+function toggleH(el){
+  const done=el.classList.contains('done');
+  const nameEl=el.nextElementSibling.querySelector('.hito-name');
+  const tagEl=el.parentElement.querySelector('.hito-tag');
+  if(done){el.classList.remove('done');el.textContent='';nameEl.classList.remove('struck');tagEl.className='hito-tag tag-new';tagEl.textContent='Pendiente';}
+  else{
+    el.classList.add('done');el.textContent='✓';nameEl.classList.add('struck');tagEl.className='hito-tag tag-ok';tagEl.textContent='Logrado';
+    addStreakDay('Hito marcado');
+  }
+  syncHomeProgress();
+}
+
+function syncHomeProgress(){
+  const total=document.querySelectorAll('#sc-home .hito-check').length;
+  const done=document.querySelectorAll('#sc-home .hito-check.done').length;
+  const pct=Math.round(done/total*100);
+  document.getElementById('home-pct').textContent=pct+'%';
+  document.getElementById('home-bar').style.width=pct+'%';
+}
+
+function toggleAv(el){
+  const done=el.classList.contains('done');
+  const nameEl=el.nextElementSibling.querySelector('.av-name');
+  const tagEl=el.parentElement.querySelector('.av-tag');
+  if(done){el.classList.remove('done');el.textContent='';nameEl.classList.remove('struck');tagEl.className='av-tag tag-new';tagEl.textContent='Pendiente';}
+  else{
+    el.classList.add('done');el.textContent='✓';nameEl.classList.add('struck');tagEl.className='av-tag tag-ok';tagEl.textContent='Logrado';
+    addStreakDay('Hito marcado');
+  }
+  syncRing();
+}
+
+function syncRing(){
+  const total=document.querySelectorAll('#sc-avance .av-check').length;
+  const done=document.querySelectorAll('#sc-avance .av-check.done').length;
+  const pct=Math.round(done/total*100);
+  document.getElementById('av-pct').textContent=pct+'%';
+  const circ=2*Math.PI*46;
+  document.getElementById('prog-ring').setAttribute('stroke-dashoffset',circ*(1-done/total));
+  document.getElementById('av-sub').innerHTML=`Sofía completó <strong>${done} de ${total}</strong> hitos de esta etapa`;
+}
+
+function switchGuiasTab(t){
+  ['v','a','t'].forEach(x=>{document.getElementById('gtab-'+x).className=x===t?'gtab on':'gtab';});
+  document.getElementById('guias-videos').style.display=t==='v'?'block':'none';
+  document.getElementById('guias-articulos').style.display=t==='a'?'block':'none';
+  document.getElementById('guias-tips').style.display=t==='t'?'block':'none';
+}
+
+function toggleFaq(el){
+  const item=el.parentElement;
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
+  if(!isOpen)item.classList.add('open');
+}
+
+function openDiario(){
+  document.getElementById('modal-diario').classList.add('open');
+}
+
+function closeDiario(){
+  document.getElementById('modal-diario').classList.remove('open');
+  document.getElementById('diario-input').value='';
+}
+
+function saveDiario(){
+  const val=document.getElementById('diario-input').value.trim();
+  if(!val){alert('Escribe algo antes de guardar 😊');return;}
+  addStreakDay('Momento registrado');
+  alert('✅ Momento guardado en el diario de Sofía');
+  closeDiario();
+}
+
+// init home progress
+syncHomeProgress();
+</script>
+</body>
+</html>

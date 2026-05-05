@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LittleBox App — Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal:#2D9B8A; --teal-l:#E1F5EE; --teal-d:#1a6b5e;
+  --coral:#E87B4A; --coral-l:#FFF0E8;
+  --yellow:#F5C842; --yellow-l:#FFFBEB;
+  --cream:#FDFAF5; --sand:#F7F0E3;
+  --dk:#2C2C2A; --mid:#5C5C58; --lt:#9A9A94;
+}
+body {
+  font-family:'Nunito Sans',sans-serif;
+  background:#1C1C1A;
+  min-height:100vh;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:28px 20px;
+}
+h1,h2,h3{font-family:'Nunito',sans-serif;}
+
+.demo-label{
+  font-family:'Nunito',sans-serif; font-weight:800;
+  font-size:.67rem; letter-spacing:.12em; text-transform:uppercase;
+  color:rgba(255,255,255,.26); margin-bottom:14px; text-align:center;
+}
+
+/* STEPPER */
+.stepper{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:22px;}
+.s-step{display:flex;align-items:center;gap:6px;}
+.s-circle{
+  width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.68rem;
+  border:1.5px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.22);
+  transition:all .3s;
+}
+.s-label{font-family:'Nunito',sans-serif;font-weight:700;font-size:.68rem;color:rgba(255,255,255,.22);transition:color .3s;white-space:nowrap;}
+.s-line{width:24px;height:1.5px;background:rgba(255,255,255,.1);margin:0 2px;transition:background .3s;}
+.s-step.active .s-circle{background:var(--coral);border-color:var(--coral);color:#fff;box-shadow:0 0 0 3px rgba(232,123,74,.2);}
+.s-step.active .s-label{color:#fff;}
+.s-step.done .s-circle{background:var(--teal);border-color:var(--teal);color:#fff;}
+.s-step.done .s-label{color:rgba(255,255,255,.45);}
+.s-line.done{background:var(--teal);}
+
+/* PHONE */
+.phone-frame{
+  width:375px; background:#18212e; border-radius:48px; padding:13px;
+  box-shadow:0 40px 100px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.07);
+}
+.phone-screen{
+  width:100%;height:720px;border-radius:36px;
+  overflow:hidden;position:relative;background:var(--cream);
+}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:90px;height:26px;background:#18212e;border-radius:0 0 16px 16px;z-index:20;}
+.notch-pill{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:68px;height:5px;background:#111820;border-radius:3px;z-index:21;}
+
+/* SCREENS — fade only, no translateX inline conflict */
+.screen{
+  position:absolute;inset:0;
+  opacity:0;pointer-events:none;
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:opacity .28s ease;
+}
+.screen.active{opacity:1;pointer-events:all;}
+
+/* SHARED COMPONENTS */
+.btn-coral{background:var(--coral);color:#fff;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.92rem;padding:15px;border-radius:50px;text-align:center;width:100%;box-shadow:0 5px 18px rgba(232,123,74,.35);transition:background .2s,transform .15s;}
+.btn-coral:hover{background:#d16a39;transform:translateY(-1px);}
+.btn-teal{background:var(--teal);color:#fff;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.92rem;padding:15px;border-radius:50px;text-align:center;width:100%;box-shadow:0 5px 18px rgba(45,155,138,.3);transition:background .2s,transform .15s;margin-top:auto;}
+.btn-teal:hover{background:var(--teal-d);transform:translateY(-1px);}
+.btn-outline{background:transparent;border:1.5px solid var(--teal-l);color:var(--teal);font-family:'Nunito',sans-serif;font-weight:700;font-size:.86rem;padding:13px;border-radius:50px;text-align:center;cursor:pointer;width:100%;transition:background .2s;}
+.btn-outline:hover{background:var(--teal-l);}
+.btn-ghost{background:transparent;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:.84rem;color:rgba(255,255,255,.65);text-align:center;width:100%;padding:10px;transition:color .2s;}
+.btn-ghost:hover{color:#fff;}
+.back-btn{font-size:20px;color:rgba(255,255,255,.7);cursor:pointer;background:none;border:none;display:block;margin-bottom:10px;transition:color .2s;}
+.back-btn:hover{color:#fff;}
+.step-pill{display:inline-block;background:rgba(255,255,255,.18);color:#fff;font-family:'Nunito',sans-serif;font-weight:700;font-size:.62rem;padding:3px 10px;border-radius:50px;letter-spacing:.06em;margin-bottom:8px;}
+.h-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.3rem;color:#fff;line-height:1.2;margin-bottom:5px;}
+.h-sub{font-size:.78rem;color:rgba(255,255,255,.72);line-height:1.5;}
+.f-label{font-family:'Nunito',sans-serif;font-weight:800;font-size:.75rem;color:var(--dk);margin-bottom:4px;}
+.f-input{border:1.5px solid #EAE5DC;border-radius:11px;padding:11px 13px;font-family:'Nunito Sans',sans-serif;font-size:.86rem;color:var(--dk);background:#fff;outline:none;transition:border-color .2s;width:100%;}
+.f-input:focus{border-color:var(--coral);}
+.f-input::placeholder{color:var(--lt);}
+.f-input.pre{border-color:var(--teal-l);background:var(--teal-l);color:var(--teal-d);font-weight:600;}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.f-group{display:flex;flex-direction:column;gap:4px;}
+.terms{font-size:.66rem;color:var(--lt);text-align:center;line-height:1.5;}
+.or-row{display:flex;align-items:center;gap:10px;margin:2px 0;}
+.or-line{flex:1;height:1px;background:#EAE5DC;}
+.or-text{font-size:.72rem;color:var(--lt);font-family:'Nunito',sans-serif;font-weight:600;white-space:nowrap;}
+
+/* ── SC1: BIENVENIDA ── */
+#sc1{background:var(--teal-d);}
+.s1-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 32px 20px;position:relative;overflow:hidden;}
+.s1-blob{position:absolute;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none;}
+.blob-a{width:260px;height:260px;top:-80px;right:-70px;}
+.blob-b{width:160px;height:160px;bottom:10px;left:-50px;}
+.logo-box{width:84px;height:84px;border-radius:26px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:20px;z-index:1;box-shadow:0 12px 32px rgba(0,0,0,.18);}
+.s1-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:2.1rem;color:#fff;text-align:center;line-height:1.1;margin-bottom:10px;z-index:1;}
+.s1-title em{color:var(--yellow);font-style:normal;}
+.s1-sub{font-size:.87rem;color:rgba(255,255,255,.72);text-align:center;line-height:1.65;z-index:1;max-width:250px;}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:24px;z-index:1;}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);}
+.dot.on{background:var(--coral);width:18px;border-radius:3px;}
+.s1-bottom{background:#fff;border-radius:26px 26px 0 0;padding:24px 26px 30px;display:flex;flex-direction:column;gap:10px;}
+
+/* ── SC-LOGIN: YA TENGO CUENTA ── */
+#sc-login{background:var(--cream);}
+.login-header{background:var(--teal-d);padding:44px 24px 28px;flex-shrink:0;}
+.login-body{flex:1;padding:24px 24px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;}
+.login-logo{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.login-logo-icon{width:36px;height:36px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.login-logo-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.1rem;}
+.login-logo-name em{color:var(--yellow);font-style:normal;}
+.forgot{font-family:'Nunito',sans-serif;font-weight:700;font-size:.76rem;color:var(--teal);text-align:right;cursor:pointer;background:none;border:none;}
+.login-divider{display:flex;align-items:center;gap:10px;}
+.ld-line{flex:1;height:1px;background:#EAE5DC;}
+.ld-txt{font-size:.72rem;color:var(--lt);font-family:'Nunito',sans-serif;font-weight:600;}
+.login-new{background:var(--teal-l);border-radius:14px;padding:14px 16px;display:flex;gap:10px;align-items:center;}
+.ln-icon{font-size:20px;}
+.ln-text{font-size:.76rem;color:var(--teal-d);line-height:1.5;}
+.ln-text strong{font-weight:800;}
+.ln-link{font-family:'Nunito',sans-serif;font-weight:800;font-size:.76rem;color:var(--teal);cursor:pointer;background:none;border:none;text-decoration:underline;}
+
+/* ── SC2: CÓDIGO ── */
+#sc2{background:var(--cream);}
+.sc2-header{background:var(--teal);padding:44px 24px 26px;flex-shrink:0;}
+.sc2-body{flex:1;padding:20px 24px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;}
+.origin-tabs{display:flex;gap:8px;}
+.otab{flex:1;padding:10px 8px;border-radius:12px;text-align:center;font-family:'Nunito',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer;border:1.5px solid transparent;transition:all .2s;}
+.otab.on{background:var(--teal-l);color:var(--teal-d);border-color:var(--teal-l);}
+.otab.off{background:#fff;color:var(--mid);border-color:#EAE5DC;}
+.code-input{width:100%;border:2px solid var(--teal-l);border-radius:14px;padding:14px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:1.28rem;letter-spacing:.14em;color:var(--teal-d);background:#fff;outline:none;text-align:center;text-transform:uppercase;transition:border-color .2s;}
+.code-input:focus{border-color:var(--teal);}
+.code-hint{font-size:.71rem;color:var(--lt);text-align:center;margin-top:5px;}
+.info-card{background:var(--yellow-l);border-radius:13px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;}
+.info-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.info-text{font-size:.75rem;color:var(--mid);line-height:1.55;}
+.info-text strong{color:var(--dk);font-weight:700;}
+
+/* ── SC3: PERFIL ── */
+#sc3{background:var(--cream);}
+.sc3-header{background:var(--coral);padding:44px 24px 26px;flex-shrink:0;}
+.sc3-body{flex:1;padding:18px 22px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;}
+.avatar-row{display:flex;align-items:center;gap:14px;}
+.avatar-circle{width:56px;height:56px;border-radius:50%;flex-shrink:0;background:var(--coral-l);display:flex;align-items:center;justify-content:center;font-size:26px;border:2.5px dashed #F5C4B0;}
+.avatar-hint{font-size:.74rem;color:var(--mid);line-height:1.5;}
+.avatar-hint strong{display:block;font-family:'Nunito',sans-serif;font-weight:800;color:var(--dk);font-size:.8rem;}
+.gender-btns{display:flex;gap:6px;}
+.g-btn{flex:1;padding:9px 4px;border-radius:50px;text-align:center;font-family:'Nunito',sans-serif;font-weight:700;font-size:.72rem;cursor:pointer;border:1.5px solid #EAE5DC;background:#fff;color:var(--mid);transition:all .2s;}
+.g-btn.sel{background:var(--teal-l);color:var(--teal-d);border-color:var(--teal-l);}
+
+/* ── SC4: ETAPA DESBLOQUEADA ── */
+#sc4{background:#fff;}
+.sc4-top{background:var(--teal);padding:48px 26px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;overflow:hidden;flex-shrink:0;}
+.sc4-blob-a{position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);top:-60px;right:-60px;}
+.sc4-blob-b{position:absolute;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.04);bottom:-30px;left:-30px;}
+.check-circle{width:60px;height:60px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;z-index:1;box-shadow:0 8px 24px rgba(0,0,0,.12);}
+.sc4-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.2rem;color:#fff;margin-bottom:5px;z-index:1;}
+.sc4-title em{color:var(--yellow);font-style:normal;}
+.sc4-sub{font-size:.78rem;color:rgba(255,255,255,.76);z-index:1;line-height:1.5;}
+.kit-card{margin:-16px 16px 0;border-radius:18px;background:#fff;box-shadow:0 8px 28px rgba(0,0,0,.1);padding:16px;z-index:2;position:relative;display:flex;gap:13px;align-items:center;flex-shrink:0;}
+.kit-icon-box{width:50px;height:50px;border-radius:13px;background:var(--yellow-l);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.kit-level{font-family:'Nunito',sans-serif;font-weight:800;font-size:.62rem;color:var(--teal);letter-spacing:.05em;margin-bottom:2px;}
+.kit-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:.93rem;color:var(--dk);margin-bottom:2px;}
+.kit-range{font-size:.71rem;color:var(--mid);}
+.sc4-body{flex:1;padding:16px 18px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;}
+.unlocked-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:.78rem;color:var(--dk);}
+.unlock-list{display:flex;flex-direction:column;gap:7px;}
+.unlock-item{display:flex;align-items:center;gap:10px;background:var(--cream);border-radius:11px;padding:9px 11px;}
+.u-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.ui-t{background:var(--teal-l);} .ui-c{background:var(--coral-l);} .ui-y{background:var(--yellow-l);} .ui-s{background:var(--sand);}
+.u-name{font-family:'Nunito',sans-serif;font-weight:700;font-size:.78rem;color:var(--dk);}
+.u-sub{font-size:.67rem;color:var(--lt);}
+
+.demo-hint{margin-top:16px;text-align:center;font-family:'Nunito',sans-serif;font-weight:600;font-size:.67rem;color:rgba(255,255,255,.17);}
+</style>
+</head>
+<body>
+
+<div class="demo-label">LittleBox App · Demo navegable — Onboarding</div>
+
+<!-- STEPPER — se actualiza dinámicamente -->
+<div class="stepper" id="stepper">
+  <div class="s-step active" id="st0"><div class="s-circle">1</div><div class="s-label">Inicio</div></div>
+  <div class="s-line" id="ln0"></div>
+  <div class="s-step" id="st1"><div class="s-circle">2</div><div class="s-label">Código</div></div>
+  <div class="s-line" id="ln1"></div>
+  <div class="s-step" id="st2"><div class="s-circle">3</div><div class="s-label">Perfil</div></div>
+  <div class="s-line" id="ln2"></div>
+  <div class="s-step" id="st3"><div class="s-circle">4</div><div class="s-label">Tu etapa</div></div>
+</div>
+
+<div class="phone-frame">
+  <div class="notch"></div><div class="notch-pill"></div>
+  <div class="phone-screen">
+
+    <!-- SC1: BIENVENIDA -->
+    <div class="screen active" id="sc1">
+      <div class="s1-hero">
+        <div class="s1-blob blob-a"></div><div class="s1-blob blob-b"></div>
+        <div class="logo-box">🐦</div>
+        <div class="s1-title">Little<em>Box</em></div>
+        <div class="s1-sub">El acompañamiento que tu bebé y tú merecen — en cada etapa.</div>
+        <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <div class="s1-bottom">
+        <button class="btn-coral" onclick="goTo('sc2', 1)">Tengo un código de kit →</button>
+        <div class="or-row"><div class="or-line"></div><div class="or-text">o</div><div class="or-line"></div></div>
+        <button class="btn-outline" onclick="goTo('sc-login', -1)">Ya tengo cuenta — entrar</button>
+        <div class="terms">Al continuar aceptas los Términos y la Política de Privacidad de LittleBox</div>
+      </div>
+    </div>
+
+    <!-- SC-LOGIN: INICIO DE SESIÓN -->
+    <div class="screen" id="sc-login">
+      <div class="login-header">
+        <button class="back-btn" onclick="goTo('sc1', 0)">←</button>
+        <div class="login-logo">
+          <div class="login-logo-icon">🐦</div>
+          <div class="login-logo-name">Little<em>Box</em></div>
+        </div>
+        <div class="h-title">Bienvenida de vuelta</div>
+        <div class="h-sub">Ingresa con tu correo y contraseña.</div>
+      </div>
+      <div class="login-body">
+        <div class="f-group">
+          <div class="f-label">Correo electrónico</div>
+          <input class="f-input" type="email" placeholder="tu@correo.com">
+        </div>
+        <div class="f-group">
+          <div class="f-label">Contraseña</div>
+          <input class="f-input" type="password" placeholder="••••••••">
+          <button class="forgot">¿Olvidaste tu contraseña?</button>
+        </div>
+        <button class="btn-teal" onclick="goTo('sc4', 3)" style="margin-top:4px;">Entrar →</button>
+        <div class="login-divider"><div class="ld-line"></div><div class="ld-txt">¿Primera vez aquí?</div><div class="ld-line"></div></div>
+        <div class="login-new">
+          <div class="ln-icon">📦</div>
+          <div class="ln-text">
+            <strong>¿Tienes un kit nuevo?</strong><br>
+            Actívalo con tu código y crea tu cuenta.
+            <br><button class="ln-link" onclick="goTo('sc2', 1)">Tengo un código →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SC2: CÓDIGO -->
+    <div class="screen" id="sc2">
+      <div class="sc2-header">
+        <button class="back-btn" onclick="goTo('sc1', 0)">←</button>
+        <div class="step-pill">PASO 1 DE 2 · ACCESO</div>
+        <div class="h-title">Ingresa tu código de kit</div>
+        <div class="h-sub">El código activa tu nivel y desbloquea el contenido de la etapa.</div>
+      </div>
+      <div class="sc2-body">
+        <div>
+          <div class="f-label" style="margin-bottom:8px;">¿Dónde compraste?</div>
+          <div class="origin-tabs">
+            <div class="otab on" id="tab-f" onclick="switchTab('f')">📦 Kit físico</div>
+            <div class="otab off" id="tab-o" onclick="switchTab('o')">🌐 Online</div>
+          </div>
+        </div>
+        <div>
+          <div class="f-label">Código de acceso</div>
+          <input class="code-input" id="code-field" type="text" placeholder="LB-XXXX-XXXX" maxlength="11" value="LB-3K8M-">
+          <div class="code-hint" id="code-hint">Encuéntralo en la tarjeta dentro de tu kit</div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">💡</div>
+          <div class="info-text" id="info-text">
+            <strong>Kit físico:</strong> La tarjeta con tu código está dentro del paquete.<br>
+            <strong>Online:</strong> Tu código llega al correo al confirmar la compra.
+          </div>
+        </div>
+        <button class="btn-coral" onclick="goTo('sc3', 2)" style="margin-top:auto;">Activar mi kit →</button>
+      </div>
+    </div>
+
+    <!-- SC3: PERFIL BEBÉ -->
+    <div class="screen" id="sc3">
+      <div class="sc3-header">
+        <button class="back-btn" onclick="goTo('sc2', 1)">←</button>
+        <div class="step-pill">PASO 2 DE 2 · PERFIL</div>
+        <div class="h-title">Cuéntanos sobre tu bebé</div>
+        <div class="h-sub">Personalizamos toda la experiencia para él o ella.</div>
+      </div>
+      <div class="sc3-body">
+        <div class="avatar-row">
+          <div class="avatar-circle">👶</div>
+          <div class="avatar-hint"><strong>Foto del bebé</strong>Opcional · toca para agregar</div>
+        </div>
+        <div class="f-group">
+          <div class="f-label">Nombre del bebé</div>
+          <input class="f-input pre" id="baby-name" type="text" value="Sofía" placeholder="¿Cómo se llama?">
+        </div>
+        <div class="f-row">
+          <div class="f-group">
+            <div class="f-label">Fecha de nacimiento</div>
+            <input class="f-input pre" type="text" value="12/09/2025">
+          </div>
+          <div class="f-group">
+            <div class="f-label">Género</div>
+            <div class="gender-btns">
+              <div class="g-btn sel" onclick="selG(this)">Niña</div>
+              <div class="g-btn" onclick="selG(this)">Niño</div>
+              <div class="g-btn" onclick="selG(this)">N/D</div>
+            </div>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-group"><div class="f-label">Peso (kg)</div><input class="f-input" type="text" placeholder="ej. 7.2"></div>
+          <div class="f-group"><div class="f-label">Talla (cm)</div><input class="f-input" type="text" placeholder="ej. 68"></div>
+        </div>
+        <button class="btn-coral" id="btn-perfil" onclick="goTo('sc4', 3)">Crear perfil de Sofía →</button>
+      </div>
+    </div>
+
+    <!-- SC4: ETAPA DESBLOQUEADA -->
+    <div class="screen" id="sc4">
+      <div class="sc4-top">
+        <div class="sc4-blob-a"></div><div class="sc4-blob-b"></div>
+        <div class="check-circle">🎉</div>
+        <div class="sc4-title">¡Bienvenida, <em id="sc4-name">Sofía</em>!</div>
+        <div class="sc4-sub">Tu kit está activo. Aquí empieza el acompañamiento.</div>
+      </div>
+      <div class="kit-card">
+        <div class="kit-icon-box">📦</div>
+        <div>
+          <div class="kit-level">NIVEL 3 · DESBLOQUEADO ✓</div>
+          <div class="kit-name">Exploración activa</div>
+          <div class="kit-range">6 — 12 meses · Sofía tiene 8 meses</div>
+        </div>
+      </div>
+      <div class="sc4-body">
+        <div class="unlocked-title">Lo que desbloqueaste con tu kit:</div>
+        <div class="unlock-list">
+          <div class="unlock-item"><div class="u-icon ui-t">🧸</div><div><div class="u-name">Tu kit de juguetes</div><div class="u-sub">Fichas y guías de uso</div></div></div>
+          <div class="unlock-item"><div class="u-icon ui-c">📋</div><div><div class="u-name">Hitos de la etapa</div><div class="u-sub">Checklist mensual personalizado</div></div></div>
+          <div class="unlock-item"><div class="u-icon ui-y">🎥</div><div><div class="u-name">Videos con la pedagoga</div><div class="u-sub">Cómo usar cada juguete</div></div></div>
+          <div class="unlock-item"><div class="u-icon ui-s">👩‍⚕️</div><div><div class="u-name">Directorio de especialistas</div><div class="u-sub">Pediatras y centros afiliados</div></div></div>
+        </div>
+        <button class="btn-teal" id="btn-home" onclick="alert('🚀 ¡Aquí abriría la pantalla principal!')">Ir al kit de Sofía →</button>
+      </div>
+    </div>
+
+  </div><!-- phone-screen -->
+</div><!-- phone-frame -->
+
+<div class="demo-hint">Toca los botones para navegar · ← para volver</div>
+
+<script>
+const STEP_MAP = { 'sc1':0, 'sc-login':-1, 'sc2':1, 'sc3':2, 'sc4':3 };
+let curId = 'sc1';
+
+function goTo(nextId, stepIdx) {
+  const cur = document.getElementById(curId);
+  const next = document.getElementById(nextId);
+  if (!cur || !next || curId === nextId) return;
+
+  // simple fade
+  cur.style.opacity = '0';
+  cur.style.pointerEvents = 'none';
+
+  setTimeout(() => {
+    cur.classList.remove('active');
+    cur.style.opacity = '';
+    cur.style.pointerEvents = '';
+
+    next.style.opacity = '0';
+    next.classList.add('active');
+    requestAnimationFrame(() => {
+      next.style.transition = 'opacity .28s ease';
+      next.style.opacity = '1';
+      setTimeout(() => { next.style.transition = ''; next.style.opacity = ''; }, 300);
+    });
+
+    curId = nextId;
+    updateStepper(stepIdx);
+
+    // sync dynamic content
+    if (nextId === 'sc4') {
+      const name = document.getElementById('baby-name').value.trim() || 'tu bebé';
+      document.getElementById('sc4-name').textContent = name;
+      document.getElementById('btn-home').textContent = `Ir al kit de ${name} →`;
+    }
+  }, 240);
+}
+
+function updateStepper(stepIdx) {
+  // hide stepper for login (not part of the main numbered flow)
+  const stepper = document.getElementById('stepper');
+  if (stepIdx === -1) { stepper.style.opacity = '0.3'; return; }
+  stepper.style.opacity = '1';
+
+  document.querySelectorAll('.s-step').forEach((s,i) => {
+    s.classList.remove('active','done');
+    if (i < stepIdx) s.classList.add('done');
+    if (i === stepIdx) s.classList.add('active');
+  });
+  document.querySelectorAll('.s-line').forEach((l,i) => l.classList.toggle('done', i < stepIdx));
+}
+
+function switchTab(t) {
+  document.getElementById('tab-f').className = t==='f' ? 'otab on' : 'otab off';
+  document.getElementById('tab-o').className = t==='o' ? 'otab on' : 'otab off';
+  if (t === 'f') {
+    document.getElementById('code-hint').textContent = 'Encuéntralo en la tarjeta dentro de tu kit';
+    document.getElementById('info-text').innerHTML = '<strong>Kit físico:</strong> La tarjeta con tu código está dentro del paquete.<br><strong>Online:</strong> Tu código llega al correo al confirmar la compra.';
+  } else {
+    document.getElementById('code-hint').textContent = 'Revisa tu correo de confirmación de compra';
+    document.getElementById('info-text').innerHTML = '<strong>Compra online:</strong> Tu código fue enviado al correo al confirmar la compra. También lo ves en tu cuenta del sitio web.';
+  }
+}
+
+function selG(el) {
+  document.querySelectorAll('.g-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+document.getElementById('baby-name').addEventListener('input', function() {
+  const n = this.value.trim() || 'tu bebé';
+  document.getElementById('btn-perfil').textContent = `Crear perfil de ${n} →`;
+});
+</script>
+</body>
+</html>
