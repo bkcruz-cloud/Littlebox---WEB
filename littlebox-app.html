@@ -11,10 +11,9 @@
   --teal:#2D9B8A;--teal-l:#E1F5EE;--teal-d:#1a6b5e;
   --coral:#E87B4A;--coral-l:#FFF0E8;
   --yellow:#F5C842;--yellow-l:#FFFBEB;
-  --pink-l:#FEF0F5;--sage-l:#EEF7F0;
+  --pink:#E87B9A;--pink-l:#FEF0F5;--pink-m:#FADADF;--sage-l:#EEF7F0;
   --cream:#FDFAF5;--sand:#F7F0E3;
   --dk:#2C2C2A;--mid:#5C5C58;--lt:#9A9A94;
-  --purple:#7C4DFF;--purple-l:#EDE7FF;
 }
 body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;}
 .demo-label{font-family:'Nunito',sans-serif;font-weight:800;font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.26);margin-bottom:18px;text-align:center;}
@@ -56,7 +55,7 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
 .card{background:#fff;border-radius:16px;border:1.5px solid #F0EBE2;}
 
 /* ── STREAK BANNER ── */
-.streak-banner{background:linear-gradient(135deg,#7C4DFF,#5B35CC);border-radius:16px;padding:14px 16px;margin:14px 16px 0;cursor:pointer;transition:transform .15s;position:relative;}
+.streak-banner{background:linear-gradient(135deg,#E87B9A,#D4607E);border-radius:16px;padding:14px 16px;margin:14px 16px 0;cursor:pointer;transition:transform .15s;position:relative;}
 .streak-banner:hover{transform:translateY(-1px);}
 .streak-top{display:flex;gap:12px;align-items:center;margin-bottom:10px;}
 .streak-fire{font-size:28px;}
@@ -66,11 +65,11 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
 .streak-days{background:rgba(255,255,255,.2);border-radius:10px;padding:6px 12px;text-align:center;}
 .streak-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.3rem;color:#fff;line-height:1;}
 .streak-lbl{font-family:'Nunito',sans-serif;font-weight:700;font-size:.55rem;color:rgba(255,255,255,.75);letter-spacing:.05em;}
-.streak-progress-wrap{background:rgba(255,255,255,.12);border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:10px;}
-.streak-prog-bar-bg{flex:1;height:6px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden;}
+.streak-progress-wrap{background:rgba(255,255,255,.15);border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:10px;}
+.streak-prog-bar-bg{flex:1;height:6px;background:rgba(255,255,255,.25);border-radius:3px;overflow:hidden;}
 .streak-prog-bar-fill{height:100%;border-radius:3px;background:var(--yellow);transition:width .4s ease;}
-.streak-prog-lbl{font-family:'Nunito',sans-serif;font-weight:700;font-size:.65rem;color:rgba(255,255,255,.85);white-space:nowrap;}
-.streak-action-feed{position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:#7C4DFF;color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;padding:4px 12px;border-radius:50px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .3s,top .3s;z-index:40;}
+.streak-prog-lbl{font-family:'Nunito',sans-serif;font-weight:700;font-size:.65rem;color:rgba(255,255,255,.88);white-space:nowrap;}
+.streak-action-feed{position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:#E87B9A;color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;padding:4px 12px;border-radius:50px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .3s,top .3s;z-index:40;}
 .streak-action-feed.show{opacity:1;top:-36px;}
 .badges-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
 .badges-row::-webkit-scrollbar{display:none;}
@@ -245,6 +244,10 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
 .art-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;color:var(--dk);margin-bottom:3px;}
 .art-meta{font-size:.7rem;color:var(--lt);}
 .art-arrow{font-size:16px;color:var(--lt);}
+.art-expandable .art-extract{display:none;font-size:.74rem;color:var(--mid);line-height:1.55;margin-top:8px;padding-top:8px;border-top:1px solid #F0EBE2;}
+.art-expandable.open .art-extract{display:block;}
+.art-expandable.open .art-chev{transform:rotate(90deg);}
+.art-chev{transition:transform .25s;}
 
 /* ── ESPECIALISTAS ── */
 .esp-intro{background:var(--teal-l);border-radius:14px;padding:13px 15px;margin:14px 16px 0;font-size:.76rem;color:var(--teal-d);line-height:1.55;}
@@ -286,6 +289,49 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
 .modal-textarea{width:100%;border:1.5px solid #EAE5DC;border-radius:14px;padding:12px 14px;font-family:'Nunito Sans',sans-serif;font-size:.86rem;color:var(--dk);resize:none;outline:none;height:90px;margin-bottom:14px;}
 .modal-textarea:focus{border-color:var(--teal);}
 .modal-close{position:absolute;top:18px;right:18px;font-size:20px;color:var(--lt);cursor:pointer;background:none;border:none;}
+
+/* ── FLOATING DIARY BUTTON ── */
+.fab-diario{
+  position:absolute;bottom:80px;right:16px;z-index:25;
+  width:46px;height:46px;border-radius:50%;
+  background:var(--teal);color:#fff;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:0 4px 16px rgba(45,155,138,.4);
+  transition:transform .2s,box-shadow .2s;
+}
+.fab-diario:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(45,155,138,.5);}
+.fab-diario:active{transform:scale(.95);}
+.fab-tooltip{
+  position:absolute;bottom:80px;right:68px;z-index:25;
+  background:var(--dk);color:#fff;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:.68rem;
+  padding:5px 10px;border-radius:8px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.fab-tooltip::after{content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);border:5px solid transparent;border-left-color:var(--dk);}
+.fab-diario:hover + .fab-tooltip{opacity:1;}
+
+/* ── ESPECIALISTAS REDISEÑO ── */
+.esp-card-new{background:#fff;border-radius:18px;border:1.5px solid #F0EBE2;overflow:hidden;margin-bottom:14px;transition:transform .15s,box-shadow .15s;}
+.esp-card-new:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.08);}
+.esp-card-header{background:var(--cream);padding:16px;display:flex;gap:14px;align-items:center;}
+.esp-av-new{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;flex-shrink:0;}
+.esp-header-info{flex:1;}
+.esp-name-new{font-family:'Nunito',sans-serif;font-weight:900;font-size:.92rem;color:var(--dk);margin-bottom:2px;}
+.esp-role-new{font-size:.72rem;color:var(--teal);font-weight:700;font-family:'Nunito',sans-serif;margin-bottom:2px;}
+.esp-exp{font-size:.68rem;color:var(--lt);}
+.esp-aval{padding:12px 16px;font-size:.76rem;color:var(--mid);line-height:1.55;border-bottom:1px solid #F0EBE2;}
+.esp-aval strong{color:var(--dk);font-weight:700;}
+.esp-contact{padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
+.esp-contact-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;color:var(--dk);margin-bottom:2px;}
+.esp-contact-note{font-size:.68rem;color:var(--coral);font-family:'Nunito',sans-serif;font-weight:700;margin-bottom:8px;}
+.esp-contact-btns{display:flex;gap:7px;flex-wrap:wrap;}
+.esp-cbtn{padding:8px 12px;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.7rem;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;transition:opacity .2s;}
+.esp-cbtn:hover{opacity:.85;}
+.ecb-phone{background:var(--teal-l);color:var(--teal-d);}
+.ecb-mail{background:#EDE7FF;color:#5B35CC;}
+.ecb-ig{background:#FEF0F5;color:#C2185B;}
+.ecb-web{background:var(--sand);color:var(--mid);}
 </style>
 </head>
 <body>
@@ -301,7 +347,35 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
       <div class="app-header">
         <div class="hblob-a"></div><div class="hblob-b"></div>
         <div class="header-top">
-          <div class="app-logo">Little<em>Box</em></div>
+          <div class="app-logo"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:5px;flex-shrink:0;">
+  <!-- Body -->
+  <ellipse cx="11" cy="13" rx="5" ry="3.5" fill="white" opacity="0.95"/>
+  <!-- Wing detail -->
+  <ellipse cx="11" cy="13.5" rx="4" ry="2.2" fill="rgba(255,255,255,0.3)"/>
+  <!-- Neck -->
+  <path d="M11 9.5 Q10 7.5 9.5 6" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <!-- Head -->
+  <circle cx="9" cy="5.2" r="1.8" fill="white"/>
+  <!-- Beak -->
+  <path d="M7.4 5 L5.2 4.4" stroke="#E87B4A" stroke-width="1.4" stroke-linecap="round"/>
+  <!-- Eye -->
+  <circle cx="8.6" cy="4.7" r="0.4" fill="#2D9B8A"/>
+  <!-- Tail -->
+  <path d="M16 12.5 Q18 11 19 11.5" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <!-- Leg 1 -->
+  <path d="M9.5 16.2 L9 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Leg 2 -->
+  <path d="M12 16.4 L12.5 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Foot 1 -->
+  <path d="M9 18.5 L7.8 19.5 M9 18.5 L9.8 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <!-- Foot 2 -->
+  <path d="M12.5 18.5 L11.5 19.5 M12.5 18.5 L13.5 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <!-- Bundle/box hint -->
+  <rect x="12" y="9" width="4" height="4" rx="1" fill="#F5C842" opacity="0.9"/>
+  <path d="M12 11 L16 11" stroke="rgba(0,0,0,0.15)" stroke-width="0.6"/>
+  <!-- String from beak to bundle -->
+  <path d="M7 4.8 Q9 7 12 9" stroke="rgba(255,255,255,0.6)" stroke-width="0.8" stroke-dasharray="1.5 1" fill="none"/>
+</svg>Little<em>Box</em></div>
           <div class="header-right">
             <button class="notif-btn">🔔<div class="notif-dot"></div></button>
           </div>
@@ -335,13 +409,30 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
 
         <!-- INSIGNIAS -->
         <div class="section" style="margin-top:14px;">
-          <div class="sec-title">Tus insignias <button class="sec-link" onclick="openStreakModal()">Ver todas →</button></div>
-          <div class="badges-row">
+          <div class="sec-title">Tus insignias
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-family:'Nunito',sans-serif;font-weight:700;font-size:.68rem;color:var(--lt);" id="badge-counter">3 de 5</span>
+              <div style="display:flex;background:#F0EBE2;border-radius:50px;padding:2px;">
+                <button onclick="setBadgeView('row')" id="btn-row" style="border:none;cursor:pointer;border-radius:50px;padding:4px 10px;font-size:.62rem;font-family:'Nunito',sans-serif;font-weight:700;background:var(--teal);color:#fff;transition:all .2s;">Lista</button>
+                <button onclick="setBadgeView('grid')" id="btn-grid" style="border:none;cursor:pointer;border-radius:50px;padding:4px 10px;font-size:.62rem;font-family:'Nunito',sans-serif;font-weight:700;background:transparent;color:var(--mid);transition:all .2s;">Todas</button>
+              </div>
+            </div>
+          </div>
+          <!-- VISTA LISTA (scroll horizontal) -->
+          <div id="badges-list-view" class="badges-row">
             <div class="badge-pill earned"><div class="badge-icon">🌱</div><div class="badge-name">Primera semana</div></div>
             <div class="badge-pill earned"><div class="badge-icon">📝</div><div class="badge-name">Primer recuerdo</div></div>
             <div class="badge-pill earned"><div class="badge-icon">✅</div><div class="badge-name">Primer hito</div></div>
             <div class="badge-pill locked"><div class="badge-icon">🔥</div><div class="badge-name locked-name">30 días</div></div>
             <div class="badge-pill locked"><div class="badge-icon">🎁</div><div class="badge-name locked-name">Descuento 15%</div></div>
+          </div>
+          <!-- VISTA GRID (todas expandidas) -->
+          <div id="badges-grid-view" style="display:none;display:none;gap:8px;flex-wrap:wrap;">
+            <div class="badge-pill earned" style="flex-direction:column;padding:12px 14px;border-radius:14px;text-align:center;gap:6px;"><div class="badge-icon" style="font-size:22px;">🌱</div><div class="badge-name">Primera semana</div><div style="font-size:.62rem;color:var(--lt);">Desbloqueada ✓</div></div>
+            <div class="badge-pill earned" style="flex-direction:column;padding:12px 14px;border-radius:14px;text-align:center;gap:6px;"><div class="badge-icon" style="font-size:22px;">📝</div><div class="badge-name">Primer recuerdo</div><div style="font-size:.62rem;color:var(--lt);">Desbloqueada ✓</div></div>
+            <div class="badge-pill earned" style="flex-direction:column;padding:12px 14px;border-radius:14px;text-align:center;gap:6px;"><div class="badge-icon" style="font-size:22px;">✅</div><div class="badge-name">Primer hito</div><div style="font-size:.62rem;color:var(--lt);">Desbloqueada ✓</div></div>
+            <div class="badge-pill locked" style="flex-direction:column;padding:12px 14px;border-radius:14px;text-align:center;gap:6px;"><div class="badge-icon" style="font-size:22px;">🔥</div><div class="badge-name locked-name">30 días</div><div style="font-size:.62rem;color:var(--lt);">18 días más</div></div>
+            <div class="badge-pill locked" style="flex-direction:column;padding:12px 14px;border-radius:14px;text-align:center;gap:6px;"><div class="badge-icon" style="font-size:22px;">🎁</div><div class="badge-name locked-name">Descuento 15%</div><div style="font-size:.62rem;color:var(--lt);">Con 30 días</div></div>
           </div>
         </div>
 
@@ -404,17 +495,6 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
           <div class="nb-arrow">›</div>
         </div>
 
-        <!-- ACCESO RÁPIDO -->
-        <div class="section" style="margin-top:16px;">
-          <div class="sec-title">Acceso rápido</div>
-          <div class="quick-grid">
-            <div class="qa-item" onclick="switchTab('kit')"><div class="qa-icon qi-t">🧸</div><div class="qa-lbl">Mi Kit</div></div>
-            <div class="qa-item" onclick="switchTab('avance')"><div class="qa-icon qi-c">📋</div><div class="qa-lbl">Avance</div></div>
-            <div class="qa-item" onclick="switchTab('guias')"><div class="qa-icon qi-y">🎥</div><div class="qa-lbl">Guías</div></div>
-            <div class="qa-item" onclick="switchTab('especialistas')"><div class="qa-icon qi-s">👩‍⚕️</div><div class="qa-lbl">Especialistas</div></div>
-          </div>
-        </div>
-
         <!-- HITOS -->
         <div class="section">
           <div class="sec-title">Hitos de esta semana <button class="sec-link" onclick="switchTab('avance')">Ver todos →</button></div>
@@ -423,15 +503,6 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
             <div class="hito-item"><div class="hito-check done" onclick="toggleH(this)">✓</div><div class="hito-text"><div class="hito-name struck">Dice "mamá" o "papá"</div><div class="hito-area">Lenguaje temprano</div></div><div class="hito-tag tag-ok">Logrado</div></div>
             <div class="hito-item"><div class="hito-check" onclick="toggleH(this)"></div><div class="hito-text"><div class="hito-name">Aplaude con ayuda</div><div class="hito-area">Coordinación bilateral</div></div><div class="hito-tag tag-new">Pendiente</div></div>
             <div class="hito-item"><div class="hito-check" onclick="toggleH(this)"></div><div class="hito-text"><div class="hito-name">Se pone de pie agarrada</div><div class="hito-area">Desarrollo motor</div></div><div class="hito-tag tag-new">Pendiente</div></div>
-          </div>
-        </div>
-
-        <!-- JUGUETE DEL DÍA -->
-        <div class="section" style="padding-bottom:18px;">
-          <div class="sec-title">Juguete de hoy <button class="sec-link" onclick="switchTab('kit')">Ver mi kit →</button></div>
-          <div class="toy-card" onclick="switchTab('kit')">
-            <div class="toy-top"><div class="toy-emoji">📦</div><div><div class="toy-badge">✦ Recomendado hoy</div><div class="toy-name">Apiladora de aros</div><div class="toy-area-lbl">Coordinación ojo-mano · Permanencia</div></div></div>
-            <div class="toy-bottom"><div class="toy-tip">Ideal para los 8 meses. Trabaja el agarre y la concentración.</div><button class="toy-btn">Ver cómo →</button></div>
           </div>
         </div>
 
@@ -449,16 +520,54 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
     <div class="screen" id="sc-kit">
       <div class="app-header">
         <div class="hblob-a"></div><div class="hblob-b"></div>
-        <div class="header-top"><div class="app-logo">Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
+        <div class="header-top"><div class="app-logo"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:5px;flex-shrink:0;">
+  <!-- Body -->
+  <ellipse cx="11" cy="13" rx="5" ry="3.5" fill="white" opacity="0.95"/>
+  <!-- Wing detail -->
+  <ellipse cx="11" cy="13.5" rx="4" ry="2.2" fill="rgba(255,255,255,0.3)"/>
+  <!-- Neck -->
+  <path d="M11 9.5 Q10 7.5 9.5 6" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <!-- Head -->
+  <circle cx="9" cy="5.2" r="1.8" fill="white"/>
+  <!-- Beak -->
+  <path d="M7.4 5 L5.2 4.4" stroke="#E87B4A" stroke-width="1.4" stroke-linecap="round"/>
+  <!-- Eye -->
+  <circle cx="8.6" cy="4.7" r="0.4" fill="#2D9B8A"/>
+  <!-- Tail -->
+  <path d="M16 12.5 Q18 11 19 11.5" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <!-- Leg 1 -->
+  <path d="M9.5 16.2 L9 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Leg 2 -->
+  <path d="M12 16.4 L12.5 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Foot 1 -->
+  <path d="M9 18.5 L7.8 19.5 M9 18.5 L9.8 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <!-- Foot 2 -->
+  <path d="M12.5 18.5 L11.5 19.5 M12.5 18.5 L13.5 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <!-- Bundle/box hint -->
+  <rect x="12" y="9" width="4" height="4" rx="1" fill="#F5C842" opacity="0.9"/>
+  <path d="M12 11 L16 11" stroke="rgba(0,0,0,0.15)" stroke-width="0.6"/>
+  <!-- String from beak to bundle -->
+  <path d="M7 4.8 Q9 7 12 9" stroke="rgba(255,255,255,0.6)" stroke-width="0.8" stroke-dasharray="1.5 1" fill="none"/>
+</svg>Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
         <div class="header-title">Mi Kit</div>
         <div class="header-sub">Nivel 3 · Exploración activa · 6 juguetes</div>
       </div>
       <div class="scroll-area">
-        <div class="section" style="margin-top:16px;padding-bottom:18px;">
+
+        <!-- JUGUETE DEL DÍA — movido aquí desde Home -->
+        <div class="section" style="margin-top:16px;">
+          <div class="sec-title">Juguete de hoy ✦</div>
+          <div class="toy-card" onclick="document.getElementById('toy-apiladora').scrollIntoView({behavior:'smooth',block:'center'})" style="cursor:pointer;">
+            <div class="toy-top"><div class="toy-emoji">📦</div><div><div class="toy-badge">✦ Recomendado hoy</div><div class="toy-name">Apiladora de aros</div><div class="toy-area-lbl">Coordinación ojo-mano · Permanencia</div></div></div>
+            <div class="toy-bottom"><div class="toy-tip">Ideal para los 8 meses. Trabaja el agarre y la concentración. Toca para ver cómo usarlo ↓</div></div>
+          </div>
+        </div>
+
+        <div class="section" style="padding-bottom:18px;">
           <div class="sec-title">Juguetes · toca para ver ideas de juego</div>
           <div>
 
-            <div class="kit-item">
+            <div class="kit-item" id="toy-apiladora">
               <div class="kit-icon" style="background:var(--teal-l)">📦</div>
               <div class="kit-info">
                 <div class="kit-name">Apiladora de aros</div>
@@ -542,7 +651,35 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
     <div class="screen" id="sc-avance">
       <div class="app-header">
         <div class="hblob-a"></div><div class="hblob-b"></div>
-        <div class="header-top"><div class="app-logo">Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
+        <div class="header-top"><div class="app-logo"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:5px;flex-shrink:0;">
+  <!-- Body -->
+  <ellipse cx="11" cy="13" rx="5" ry="3.5" fill="white" opacity="0.95"/>
+  <!-- Wing detail -->
+  <ellipse cx="11" cy="13.5" rx="4" ry="2.2" fill="rgba(255,255,255,0.3)"/>
+  <!-- Neck -->
+  <path d="M11 9.5 Q10 7.5 9.5 6" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <!-- Head -->
+  <circle cx="9" cy="5.2" r="1.8" fill="white"/>
+  <!-- Beak -->
+  <path d="M7.4 5 L5.2 4.4" stroke="#E87B4A" stroke-width="1.4" stroke-linecap="round"/>
+  <!-- Eye -->
+  <circle cx="8.6" cy="4.7" r="0.4" fill="#2D9B8A"/>
+  <!-- Tail -->
+  <path d="M16 12.5 Q18 11 19 11.5" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <!-- Leg 1 -->
+  <path d="M9.5 16.2 L9 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Leg 2 -->
+  <path d="M12 16.4 L12.5 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Foot 1 -->
+  <path d="M9 18.5 L7.8 19.5 M9 18.5 L9.8 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <!-- Foot 2 -->
+  <path d="M12.5 18.5 L11.5 19.5 M12.5 18.5 L13.5 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <!-- Bundle/box hint -->
+  <rect x="12" y="9" width="4" height="4" rx="1" fill="#F5C842" opacity="0.9"/>
+  <path d="M12 11 L16 11" stroke="rgba(0,0,0,0.15)" stroke-width="0.6"/>
+  <!-- String from beak to bundle -->
+  <path d="M7 4.8 Q9 7 12 9" stroke="rgba(255,255,255,0.6)" stroke-width="0.8" stroke-dasharray="1.5 1" fill="none"/>
+</svg>Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
         <div class="header-title">Avance de Sofía</div>
         <div class="header-sub">Semana 34 · Nivel 3 · 6–12 meses</div>
       </div>
@@ -587,34 +724,54 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
 
         <!-- DIARIO DEL BEBÉ -->
         <div class="section" style="padding-bottom:18px;">
-          <div class="sec-title">Diario de Sofía <button class="sec-link" onclick="openDiario()">+ Agregar</button></div>
-          <div class="diario-add" onclick="openDiario()">
-            <span style="font-size:20px;">📝</span>
-            <div class="da-text">Registra un momento especial de hoy</div>
-          </div>
-          <div class="diario-item">
-            <div class="diario-header">
-              <div class="diario-emoji">🎉</div>
-              <div class="diario-meta">
-                <div class="diario-hito">Gateó sola por primera vez</div>
-                <div class="diario-date">14 nov 2025 · hace 12 días</div>
-              </div>
+          <div class="sec-title">
+            <div style="display:flex;align-items:center;gap:7px;">
+              <button onclick="toggleDiarioPanel()" style="background:var(--teal-l);border:none;cursor:pointer;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;" title="Ver diario">📓</button>
+              <span>Diario de Sofía</span>
             </div>
-            <div class="diario-note">¡No lo podíamos creer! Estiró los brazos hacia el osito y de pronto empezó a moverse sola. Papá lloró 🥺</div>
+            <button class="sec-link" onclick="openDiario()">+ Nuevo</button>
           </div>
-          <div class="diario-item">
-            <div class="diario-header">
-              <div class="diario-emoji">💬</div>
-              <div class="diario-meta">
-                <div class="diario-hito">Dijo "mamá" por primera vez</div>
-                <div class="diario-date">8 nov 2025 · hace 18 días</div>
-              </div>
+          <!-- Panel del diario — colapsa/expande con el librito -->
+          <div id="diario-panel" style="display:none;">
+            <div class="diario-add" onclick="openDiario()" style="margin-bottom:10px;">
+              <span style="font-size:18px;">✏️</span>
+              <div class="da-text">Registrar un momento especial</div>
             </div>
-            <div class="diario-note">Estaba llorando y de pronto me miró y dijo clarísimo mamá. Mi corazón explotó.</div>
+            <div class="diario-item">
+              <div class="diario-header">
+                <div class="diario-emoji">🎉</div>
+                <div class="diario-meta">
+                  <div class="diario-hito">Gateó sola por primera vez</div>
+                  <div class="diario-date">14 nov 2025 · hace 12 días</div>
+                </div>
+              </div>
+              <div class="diario-note">¡No lo podíamos creer! Estiró los brazos hacia el osito y de pronto empezó a moverse sola. Papá lloró 🥺</div>
+            </div>
+            <div class="diario-item">
+              <div class="diario-header">
+                <div class="diario-emoji">💬</div>
+                <div class="diario-meta">
+                  <div class="diario-hito">Dijo "mamá" por primera vez</div>
+                  <div class="diario-date">8 nov 2025 · hace 18 días</div>
+                </div>
+              </div>
+              <div class="diario-note">Estaba llorando y de pronto me miró y dijo clarísimo mamá. Mi corazón explotó.</div>
+            </div>
+          </div>
+          <!-- Estado cerrado: resumen -->
+          <div id="diario-closed" style="background:var(--cream);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="toggleDiarioPanel()">
+            <span style="font-size:22px;">📓</span>
+            <div style="flex:1;">
+              <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;color:var(--dk);">2 momentos guardados</div>
+              <div style="font-size:.72rem;color:var(--lt);">Último: Gateó sola · 14 nov</div>
+            </div>
+            <span style="font-size:14px;color:var(--lt);">▾</span>
           </div>
         </div>
 
       </div>
+      <!-- FAB diario — solo en Avance -->
+      <button class="fab-diario" onclick="toggleDiarioPanel()" title="Diario de Sofía">📓</button>
       <div class="tab-bar">
         <div class="tab-item" onclick="switchTab('home')"><div class="tab-icon">🏠</div><div class="tab-label">Inicio</div><div class="tab-dot"></div></div>
         <div class="tab-item" onclick="switchTab('kit')"><div class="tab-icon">🧸</div><div class="tab-label">Mi Kit</div><div class="tab-dot"></div></div>
@@ -628,7 +785,35 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
     <div class="screen" id="sc-guias">
       <div class="app-header">
         <div class="hblob-a"></div><div class="hblob-b"></div>
-        <div class="header-top"><div class="app-logo">Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
+        <div class="header-top"><div class="app-logo"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:5px;flex-shrink:0;">
+  <!-- Body -->
+  <ellipse cx="11" cy="13" rx="5" ry="3.5" fill="white" opacity="0.95"/>
+  <!-- Wing detail -->
+  <ellipse cx="11" cy="13.5" rx="4" ry="2.2" fill="rgba(255,255,255,0.3)"/>
+  <!-- Neck -->
+  <path d="M11 9.5 Q10 7.5 9.5 6" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <!-- Head -->
+  <circle cx="9" cy="5.2" r="1.8" fill="white"/>
+  <!-- Beak -->
+  <path d="M7.4 5 L5.2 4.4" stroke="#E87B4A" stroke-width="1.4" stroke-linecap="round"/>
+  <!-- Eye -->
+  <circle cx="8.6" cy="4.7" r="0.4" fill="#2D9B8A"/>
+  <!-- Tail -->
+  <path d="M16 12.5 Q18 11 19 11.5" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <!-- Leg 1 -->
+  <path d="M9.5 16.2 L9 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Leg 2 -->
+  <path d="M12 16.4 L12.5 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Foot 1 -->
+  <path d="M9 18.5 L7.8 19.5 M9 18.5 L9.8 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <!-- Foot 2 -->
+  <path d="M12.5 18.5 L11.5 19.5 M12.5 18.5 L13.5 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <!-- Bundle/box hint -->
+  <rect x="12" y="9" width="4" height="4" rx="1" fill="#F5C842" opacity="0.9"/>
+  <path d="M12 11 L16 11" stroke="rgba(0,0,0,0.15)" stroke-width="0.6"/>
+  <!-- String from beak to bundle -->
+  <path d="M7 4.8 Q9 7 12 9" stroke="rgba(255,255,255,0.6)" stroke-width="0.8" stroke-dasharray="1.5 1" fill="none"/>
+</svg>Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
         <div class="header-title">Guías y contenido</div>
         <div class="header-sub">Videos · artículos · tips de crianza</div>
       </div>
@@ -647,17 +832,73 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
         </div>
         <div id="guias-articulos" style="display:none;">
           <div class="section" style="padding-top:0;padding-bottom:18px;">
-            <div class="art-item"><div class="art-icon" style="background:var(--teal-l)">📚</div><div class="art-body"><div class="art-title">El gateo y su importancia en el desarrollo cerebral</div><div class="art-meta">5 min · Desarrollo motor</div></div><div class="art-arrow">›</div></div>
-            <div class="art-item"><div class="art-icon" style="background:var(--coral-l)">💬</div><div class="art-body"><div class="art-title">Primeras palabras: cuándo preocuparse y cuándo no</div><div class="art-meta">4 min · Lenguaje</div></div><div class="art-arrow">›</div></div>
-            <div class="art-item"><div class="art-icon" style="background:var(--yellow-l)">🍎</div><div class="art-body"><div class="art-title">Introducción a sólidos: guía para los 8 meses</div><div class="art-meta">6 min · Alimentación</div></div><div class="art-arrow">›</div></div>
-            <div class="art-item"><div class="art-icon" style="background:var(--sand)">😴</div><div class="art-body"><div class="art-title">Regresión del sueño a los 8–10 meses</div><div class="art-meta">5 min · Sueño</div></div><div class="art-arrow">›</div></div>
+            <div class="art-item art-expandable" onclick="toggleArt(this)">
+              <div class="art-icon" style="background:var(--teal-l)">📚</div>
+              <div class="art-body">
+                <div class="art-title">El gateo y su importancia en el desarrollo cerebral</div>
+                <div class="art-meta">5 min · Desarrollo motor</div>
+                <div class="art-extract">El gateo activa simultáneamente los dos hemisferios cerebrales, fortalece los músculos del cuello, espalda y brazos, y desarrolla la coordinación cruzada que será base para la escritura. Muchos pediatras lo consideran la etapa más importante del primer año — no te saltes este hito.</div>
+              </div>
+              <div class="art-arrow art-chev">›</div>
+            </div>
+            <div class="art-item art-expandable" onclick="toggleArt(this)">
+              <div class="art-icon" style="background:var(--coral-l)">💬</div>
+              <div class="art-body">
+                <div class="art-title">Primeras palabras: cuándo preocuparse y cuándo no</div>
+                <div class="art-meta">4 min · Lenguaje</div>
+                <div class="art-extract">Entre los 8 y 12 meses es normal que el bebé diga "mamá" y "papá" con intención. Si a los 12 meses no pronuncia ninguna palabra con significado, conviene comentarlo con el pediatra. Hablarle, leerle y cantarle son las mejores herramientas que tienes.</div>
+              </div>
+              <div class="art-arrow art-chev">›</div>
+            </div>
+            <div class="art-item art-expandable" onclick="toggleArt(this)">
+              <div class="art-icon" style="background:var(--yellow-l)">🍎</div>
+              <div class="art-body">
+                <div class="art-title">Introducción a sólidos: guía para los 8 meses</div>
+                <div class="art-meta">6 min · Alimentación</div>
+                <div class="art-extract">A los 8 meses ya puedes ofrecer papillas de textura más grumosa, frutas aplastadas y algunos finger foods blandos. La leche materna o fórmula sigue siendo el alimento principal. Evita sal, azúcar, miel y leche de vaca hasta el año.</div>
+              </div>
+              <div class="art-arrow art-chev">›</div>
+            </div>
+            <div class="art-item art-expandable" onclick="toggleArt(this)">
+              <div class="art-icon" style="background:var(--sand)">😴</div>
+              <div class="art-body">
+                <div class="art-title">Regresión del sueño a los 8–10 meses</div>
+                <div class="art-meta">5 min · Sueño</div>
+                <div class="art-extract">Es completamente normal que un bebé que dormía bien empiece a despertarse seguido entre los 8 y 10 meses. Su cerebro está procesando tantos aprendizajes nuevos que el sueño se ve afectado. Suele durar 2–6 semanas y se resuelve sola.</div>
+              </div>
+              <div class="art-arrow art-chev">›</div>
+            </div>
           </div>
         </div>
         <div id="guias-tips" style="display:none;">
           <div class="section" style="padding-top:0;padding-bottom:18px;">
-            <div class="art-item"><div class="art-icon" style="background:var(--teal-l)">💡</div><div class="art-body"><div class="art-title">Tip de la semana: escóndete y vuelve aparecer</div><div class="art-meta">Estimula la permanencia del objeto</div></div><div class="art-arrow">›</div></div>
-            <div class="art-item"><div class="art-icon" style="background:var(--coral-l)">🎵</div><div class="art-body"><div class="art-title">Canciones que estimulan el lenguaje</div><div class="art-meta">Crianza consciente</div></div><div class="art-arrow">›</div></div>
-            <div class="art-item"><div class="art-icon" style="background:var(--yellow-l)">🤲</div><div class="art-body"><div class="art-title">Masaje infantil para mejorar el vínculo</div><div class="art-meta">Apego seguro</div></div><div class="art-arrow">›</div></div>
+            <div class="art-item art-expandable" onclick="toggleArt(this)">
+              <div class="art-icon" style="background:var(--teal-l)">💡</div>
+              <div class="art-body">
+                <div class="art-title">Tip: escóndete y vuelve aparecer</div>
+                <div class="art-meta">Permanencia del objeto · Esta semana</div>
+                <div class="art-extract">Cúbrete la cara con tus manos y di "¿dónde está mamá?" — descúbrete con una sonrisa grande. Repítelo 3–4 veces. Sofía va a reírse y a esperar que vuelvas: eso es entender que las cosas existen aunque no las vea. Un juego enorme con un gesto simple.</div>
+              </div>
+              <div class="art-arrow art-chev">›</div>
+            </div>
+            <div class="art-item art-expandable" onclick="toggleArt(this)">
+              <div class="art-icon" style="background:var(--coral-l)">🎵</div>
+              <div class="art-body">
+                <div class="art-title">Canciones que estimulan el lenguaje</div>
+                <div class="art-meta">Crianza consciente</div>
+                <div class="art-extract">Canta despacio, exagerando las vocales y haciendo pausas para que el bebé "responda". Las canciones con repetición y movimiento (como las rondas) son las más efectivas. No importa si no cantas bien — a Sofía le encanta tu voz específicamente.</div>
+              </div>
+              <div class="art-arrow art-chev">›</div>
+            </div>
+            <div class="art-item art-expandable" onclick="toggleArt(this)">
+              <div class="art-icon" style="background:var(--yellow-l)">🤲</div>
+              <div class="art-body">
+                <div class="art-title">Masaje infantil para mejorar el vínculo</div>
+                <div class="art-meta">Apego seguro</div>
+                <div class="art-extract">5 minutos de masaje después del baño, con aceite de coco o bebé, fortalece el vínculo y mejora el sueño. Empieza por las piernas con movimientos suaves hacia arriba. Habla con Sofía mientras lo haces — ese contacto visual y táctil simultáneo es poderoso.</div>
+              </div>
+              <div class="art-arrow art-chev">›</div>
+            </div>
           </div>
         </div>
       </div>
@@ -674,19 +915,63 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
     <div class="screen" id="sc-especialistas">
       <div class="app-header">
         <div class="hblob-a"></div><div class="hblob-b"></div>
-        <div class="header-top"><div class="app-logo">Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
+        <div class="header-top"><div class="app-logo"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:5px;flex-shrink:0;">
+  <!-- Body -->
+  <ellipse cx="11" cy="13" rx="5" ry="3.5" fill="white" opacity="0.95"/>
+  <!-- Wing detail -->
+  <ellipse cx="11" cy="13.5" rx="4" ry="2.2" fill="rgba(255,255,255,0.3)"/>
+  <!-- Neck -->
+  <path d="M11 9.5 Q10 7.5 9.5 6" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <!-- Head -->
+  <circle cx="9" cy="5.2" r="1.8" fill="white"/>
+  <!-- Beak -->
+  <path d="M7.4 5 L5.2 4.4" stroke="#E87B4A" stroke-width="1.4" stroke-linecap="round"/>
+  <!-- Eye -->
+  <circle cx="8.6" cy="4.7" r="0.4" fill="#2D9B8A"/>
+  <!-- Tail -->
+  <path d="M16 12.5 Q18 11 19 11.5" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <!-- Leg 1 -->
+  <path d="M9.5 16.2 L9 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Leg 2 -->
+  <path d="M12 16.4 L12.5 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Foot 1 -->
+  <path d="M9 18.5 L7.8 19.5 M9 18.5 L9.8 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <!-- Foot 2 -->
+  <path d="M12.5 18.5 L11.5 19.5 M12.5 18.5 L13.5 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <!-- Bundle/box hint -->
+  <rect x="12" y="9" width="4" height="4" rx="1" fill="#F5C842" opacity="0.9"/>
+  <path d="M12 11 L16 11" stroke="rgba(0,0,0,0.15)" stroke-width="0.6"/>
+  <!-- String from beak to bundle -->
+  <path d="M7 4.8 Q9 7 12 9" stroke="rgba(255,255,255,0.6)" stroke-width="0.8" stroke-dasharray="1.5 1" fill="none"/>
+</svg>Little<em>Box</em></div><button class="notif-btn">🔔<div class="notif-dot"></div></button></div>
         <div class="header-title">Especialistas</div>
         <div class="header-sub">Directorio · Preguntas frecuentes</div>
       </div>
       <div class="scroll-area">
-        <div class="esp-intro"><strong>Directorio de contacto.</strong> Estos especialistas están afiliados a LittleBox. Contáctalos directamente — sin chat en tiempo real.</div>
+        <div class="esp-intro"><strong>Especialistas que avalan nuestra selección.</strong> Estos profesionales respaldan la calidad y pertinencia de los juguetes en cada kit de LittleBox. Sus datos de contacto son para coordinar citas — no ofrecemos consultas gratuitas.</div>
         <div class="section">
           <div class="sec-title">Nuestros especialistas</div>
           <div>
-            <div class="esp-card"><div class="esp-top"><div class="esp-avatar ea-1">MD</div><div><div class="esp-name">Dra. María Elena Domínguez</div><div class="esp-role">Pediatra del Desarrollo</div><div class="esp-spec">18 años · Neurodesarrollo infantil</div></div></div><div class="esp-actions"><button class="esp-btn eb-call">📞 Llamar</button><button class="esp-btn eb-map">📍 Ubicación</button><button class="esp-btn eb-web">🌐 Web</button></div></div>
-            <div class="esp-card"><div class="esp-top"><div class="esp-avatar ea-2">CR</div><div><div class="esp-name">Lic. Carmen Restrepo</div><div class="esp-role">Psicóloga Infantil</div><div class="esp-spec">Apego seguro · Neurodesarrollo</div></div></div><div class="esp-actions"><button class="esp-btn eb-call">📞 Llamar</button><button class="esp-btn eb-map">📍 Ubicación</button><button class="esp-btn eb-web">🌐 Web</button></div></div>
-            <div class="esp-card"><div class="esp-top"><div class="esp-avatar ea-3">AP</div><div><div class="esp-name">Prof. Andrea Palomino</div><div class="esp-role">Pedagoga Montessori</div><div class="esp-spec">Estimulación temprana · Minedu</div></div></div><div class="esp-actions"><button class="esp-btn eb-call">📞 Llamar</button><button class="esp-btn eb-map">📍 Ubicación</button><button class="esp-btn eb-web">🌐 Web</button></div></div>
-            <div class="esp-card"><div class="esp-top"><div class="esp-avatar ea-4">VT</div><div><div class="esp-name">Dra. Valentina Torres</div><div class="esp-role">Terapeuta Ocupacional</div><div class="esp-spec">Integración sensorial · Motor fino</div></div></div><div class="esp-actions"><button class="esp-btn eb-call">📞 Llamar</button><button class="esp-btn eb-map">📍 Ubicación</button><button class="esp-btn eb-web">🌐 Web</button></div></div>
+            <div class="esp-card-new">
+              <div class="esp-card-header"><div class="esp-av-new ea-1">MD</div><div class="esp-header-info"><div class="esp-name-new">Dra. María Elena Domínguez</div><div class="esp-role-new">Pediatra del Desarrollo</div><div class="esp-exp">18 años de experiencia · Neurodesarrollo infantil</div></div></div>
+              <div class="esp-aval">La Dra. Domínguez es pediatra especialista en neurodesarrollo con 18 años de experiencia. <strong>Avala los kits de LittleBox</strong> porque cada juguete está seleccionado con base en evidencia científica sobre estimulación temprana, respetando los hitos de cada etapa.</div>
+              <div class="esp-contact"><div class="esp-contact-title">Contacto para agendar cita</div><div class="esp-contact-btns"><button class="esp-cbtn ecb-phone">📞 Llamar</button><button class="esp-cbtn ecb-mail">✉️ Correo</button><button class="esp-cbtn ecb-ig">📸 Instagram</button><button class="esp-cbtn ecb-web">🌐 Web</button></div></div>
+            </div>
+            <div class="esp-card-new">
+              <div class="esp-card-header"><div class="esp-av-new ea-2">CR</div><div class="esp-header-info"><div class="esp-name-new">Lic. Carmen Restrepo</div><div class="esp-role-new">Psicóloga Infantil</div><div class="esp-exp">Maestría en Neuropsicología · Apego y vínculo</div></div></div>
+              <div class="esp-aval">La Lic. Restrepo es especialista en apego seguro y vínculo madre-bebé. <strong>Avala los kits de LittleBox</strong> porque los juguetes seleccionados refuerzan el juego compartido, clave para construir un apego seguro en los primeros años.</div>
+              <div class="esp-contact"><div class="esp-contact-title">Contacto para agendar cita</div><div class="esp-contact-btns"><button class="esp-cbtn ecb-phone">📞 Llamar</button><button class="esp-cbtn ecb-mail">✉️ Correo</button><button class="esp-cbtn ecb-ig">📸 Instagram</button></div></div>
+            </div>
+            <div class="esp-card-new">
+              <div class="esp-card-header"><div class="esp-av-new ea-3">AP</div><div class="esp-header-info"><div class="esp-name-new">Prof. Andrea Palomino</div><div class="esp-role-new">Pedagoga Montessori</div><div class="esp-exp">Coordinadora · Estimulación temprana Minedu</div></div></div>
+              <div class="esp-aval">La Prof. Palomino lidera el programa de estimulación temprana del Ministerio de Educación. <strong>Avala los kits de LittleBox</strong> porque los materiales siguen los principios Montessori de autonomía, exploración y aprendizaje a través del juego libre.</div>
+              <div class="esp-contact"><div class="esp-contact-title">Contacto para agendar cita</div><div class="esp-contact-btns"><button class="esp-cbtn ecb-phone">📞 Llamar</button><button class="esp-cbtn ecb-mail">✉️ Correo</button><button class="esp-cbtn ecb-web">🌐 Centro</button></div></div>
+            </div>
+            <div class="esp-card-new">
+              <div class="esp-card-header"><div class="esp-av-new ea-4">VT</div><div class="esp-header-info"><div class="esp-name-new">Dra. Valentina Torres</div><div class="esp-role-new">Terapeuta Ocupacional</div><div class="esp-exp">Integración sensorial · Desarrollo motor fino</div></div></div>
+              <div class="esp-aval">La Dra. Torres es experta en integración sensorial pediátrica. <strong>Avala los kits de LittleBox</strong> porque cada juguete trabaja áreas específicas del procesamiento sensorial y motor que son críticas en los primeros 3 años de vida.</div>
+              <div class="esp-contact"><div class="esp-contact-title">Contacto para agendar cita</div><div class="esp-contact-btns"><button class="esp-cbtn ecb-phone">📞 Llamar</button><button class="esp-cbtn ecb-mail">✉️ Correo</button><button class="esp-cbtn ecb-ig">📸 Instagram</button><button class="esp-cbtn ecb-web">🌐 Web</button></div></div>
+            </div>
           </div>
         </div>
         <div class="section" style="padding-bottom:18px;">
@@ -721,8 +1006,8 @@ body{font-family:'Nunito Sans',sans-serif;background:#1C1C1A;min-height:100vh;di
           <div style="background:#F7F0E3;border-radius:12px;padding:10px 14px;display:flex;gap:10px;align-items:center;">
             <span style="font-size:20px;">🏅</span><div><div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;color:#2C2C2A;">15 días → Video exclusivo de la pedagoga</div><div style="font-size:.7rem;color:#9A9A94;">3 días más para desbloquearlo</div></div>
           </div>
-          <div style="background:#FFF0E8;border-radius:12px;padding:10px 14px;display:flex;gap:10px;align-items:center;border:1.5px solid #FFD0A0;">
-            <span style="font-size:20px;">🎁</span><div><div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;color:#E87B4A;">30 días → 15% de descuento en tu próximo kit</div><div style="font-size:.7rem;color:#5C5C58;">18 días más para ganarlo</div></div>
+          <div style="background:#FADADF;border-radius:12px;padding:10px 14px;display:flex;gap:10px;align-items:center;border:1.5px solid #F5B8C4;">
+            <span style="font-size:20px;">🎁</span><div><div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;color:#D4607E;">30 días → 15% de descuento en tu próximo kit</div><div style="font-size:.7rem;color:#5C5C58;">18 días más para ganarlo</div></div>
           </div>
         </div>
         <button class="reward-btn" onclick="closeStreakModal()">¡A seguir! 🚀</button>
@@ -889,6 +1174,54 @@ function saveDiario(){
 
 // init home progress
 syncHomeProgress();
+
+/* ── BADGE SWITCH ── */
+function setBadgeView(view) {
+  const listView = document.getElementById('badges-list-view');
+  const gridView = document.getElementById('badges-grid-view');
+  const btnRow = document.getElementById('btn-row');
+  const btnGrid = document.getElementById('btn-grid');
+  if(view === 'row') {
+    listView.style.display = 'flex';
+    gridView.style.display = 'none';
+    btnRow.style.background = 'var(--teal)'; btnRow.style.color = '#fff';
+    btnGrid.style.background = 'transparent'; btnGrid.style.color = 'var(--mid)';
+  } else {
+    listView.style.display = 'none';
+    gridView.style.display = 'flex';
+    btnGrid.style.background = 'var(--teal)'; btnGrid.style.color = '#fff';
+    btnRow.style.background = 'transparent'; btnRow.style.color = 'var(--mid)';
+  }
+}
+
+/* ── TOY DAY EXPAND ── */
+function toggleToyDay(card) {
+  const ideas = document.getElementById('toy-day-ideas');
+  const btn = card.querySelector('.toy-btn');
+  const open = ideas.style.display !== 'none';
+  ideas.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? 'Ver ideas ▾' : 'Cerrar ▲';
+}
+
+/* ── DIARIO PANEL TOGGLE ── */
+function toggleDiarioPanel() {
+  const panel = document.getElementById('diario-panel');
+  const closed = document.getElementById('diario-closed');
+  const isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+  closed.style.display = isOpen ? 'flex' : 'none';
+  if(!isOpen) addStreakDay('Diario abierto');
+}
+
+/* ── ARTICLE / TIP EXPAND ── */
+function toggleArt(el) {
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.art-expandable.open').forEach(a => a.classList.remove('open'));
+  if(!isOpen) {
+    el.classList.add('open');
+    addStreakDay('Artículo leído');
+  }
+}
 </script>
 </body>
 </html>
