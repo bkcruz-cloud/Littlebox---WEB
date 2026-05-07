@@ -273,7 +273,22 @@ select.form-input { cursor: pointer; }
 <!-- NAV -->
 <nav class="checkout-nav">
   <a href="littlebox-main.html" class="nav-logo">
-    <div class="logo-icon">🐦</div>
+    <div class="logo-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="11" cy="13" rx="5" ry="3.5" fill="white" opacity="0.95"/>
+  <ellipse cx="11" cy="13.5" rx="4" ry="2.2" fill="rgba(255,255,255,0.3)"/>
+  <path d="M11 9.5 Q10 7.5 9.5 6" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <circle cx="9" cy="5.2" r="1.8" fill="white"/>
+  <path d="M7.4 5 L5.2 4.4" stroke="#E87B4A" stroke-width="1.4" stroke-linecap="round"/>
+  <circle cx="8.6" cy="4.7" r="0.4" fill="#2D9B8A"/>
+  <path d="M16 12.5 Q18 11 19 11.5" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <path d="M9.5 16.2 L9 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <path d="M12 16.4 L12.5 18.5" stroke="#E87B4A" stroke-width="1.3" stroke-linecap="round"/>
+  <path d="M9 18.5 L7.8 19.5 M9 18.5 L9.8 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <path d="M12.5 18.5 L11.5 19.5 M12.5 18.5 L13.5 19.5" stroke="#E87B4A" stroke-width="1" stroke-linecap="round"/>
+  <rect x="12" y="9" width="4" height="4" rx="1" fill="#F5C842" opacity="0.9"/>
+  <path d="M12 11 L16 11" stroke="rgba(0,0,0,0.15)" stroke-width="0.6"/>
+  <path d="M7 4.8 Q9 7 12 9" stroke="rgba(255,255,255,0.6)" stroke-width="0.8" stroke-dasharray="1.5 1" fill="none"/>
+</svg></div>
     <span><span class="lt">Little</span><span class="bx">Box</span></span>
   </a>
   <a href="littlebox-main.html" class="nav-back">← Volver al inicio</a>
@@ -472,6 +487,10 @@ select.form-input { cursor: pointer; }
             <div class="pay-method-icon">🏦</div>
             <div class="pay-method-name">Transferencia</div>
           </div>
+          <div class="pay-method" onclick="selectPayment(this,'contraentrega')">
+            <div class="pay-method-icon">🚚</div>
+            <div class="pay-method-name">Contraentrega</div>
+          </div>
         </div>
 
         <!-- TARJETA -->
@@ -500,20 +519,74 @@ select.form-input { cursor: pointer; }
         <!-- YAPE -->
         <div class="yape-info" id="pay-yape" style="display:none;">
           <div class="yape-info-title">Paga con Yape</div>
-          <div class="yape-info-sub">Realiza la transferencia al siguiente número</div>
-          <div class="yape-number">📱 987 654 321</div>
+          <div class="yape-info-sub">Escanea el QR o transfiere al número</div>
+          <div style="display:flex;gap:16px;align-items:center;margin-bottom:14px;">
+            <div style="background:white;border-radius:14px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);flex-shrink:0;">
+              <svg width="80" height="80" viewBox="0 0 80 80">
+                <rect width="80" height="80" fill="white"/>
+                <rect x="5" y="5" width="30" height="30" fill="none" stroke="#6C3CE1" stroke-width="4"/>
+                <rect x="12" y="12" width="16" height="16" fill="#6C3CE1"/>
+                <rect x="45" y="5" width="30" height="30" fill="none" stroke="#6C3CE1" stroke-width="4"/>
+                <rect x="52" y="12" width="16" height="16" fill="#6C3CE1"/>
+                <rect x="5" y="45" width="30" height="30" fill="none" stroke="#6C3CE1" stroke-width="4"/>
+                <rect x="12" y="52" width="16" height="16" fill="#6C3CE1"/>
+                <rect x="45" y="48" width="6" height="6" fill="#6C3CE1"/>
+                <rect x="54" y="48" width="6" height="6" fill="#6C3CE1"/>
+                <rect x="63" y="48" width="12" height="6" fill="#6C3CE1"/>
+                <rect x="45" y="57" width="12" height="6" fill="#6C3CE1"/>
+                <rect x="60" y="57" width="6" height="6" fill="#6C3CE1"/>
+                <rect x="45" y="66" width="6" height="6" fill="#6C3CE1"/>
+                <rect x="54" y="66" width="6" height="6" fill="#6C3CE1"/>
+                <rect x="63" y="66" width="12" height="6" fill="#6C3CE1"/>
+              </svg>
+            </div>
+            <div>
+              <div class="yape-number" style="font-size:1rem;padding:8px 14px;">📱 987 654 321</div>
+              <div style="font-size:0.75rem;color:#5C5C58;margin-top:6px;line-height:1.5;">Nombre: <strong>LittleBox SAC</strong><br>Monto exacto del pedido</div>
+            </div>
+          </div>
           <div class="yape-steps">
-            <div class="yape-step"><div class="yape-step-num">1</div>Abre tu app de Yape</div>
-            <div class="yape-step"><div class="yape-step-num">2</div>Transfiere el monto exacto al número</div>
-            <div class="yape-step"><div class="yape-step-num">3</div>Sube el voucher al confirmar</div>
+            <div class="yape-step"><div class="yape-step-num">1</div>Abre Yape y escanea el QR o ingresa el número</div>
+            <div class="yape-step"><div class="yape-step-num">2</div>Transfiere el monto exacto del pedido</div>
+            <div class="yape-step"><div class="yape-step-num">3</div>Toma captura del voucher y adjúntala</div>
+          </div>
+          <div style="margin-top:12px;">
+            <label class="form-label">Adjuntar voucher (foto o captura)</label>
+            <input class="form-input" type="file" accept="image/*" style="padding:8px;">
           </div>
         </div>
 
         <!-- PLIN -->
         <div class="plin-info" id="pay-plin" style="display:none;">
           <div class="plin-info-title">Paga con Plin</div>
-          <div class="plin-info-sub">Transfiere el monto exacto a este número</div>
-          <div class="plin-number">💚 987 654 321</div>
+          <div class="plin-info-sub">Escanea el QR o transfiere al número</div>
+          <div style="display:flex;gap:16px;align-items:center;margin-bottom:14px;">
+            <div style="background:white;border-radius:14px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);flex-shrink:0;">
+              <svg width="80" height="80" viewBox="0 0 80 80">
+                <rect width="80" height="80" fill="white"/>
+                <rect x="5" y="5" width="30" height="30" fill="none" stroke="#00C896" stroke-width="4"/>
+                <rect x="12" y="12" width="16" height="16" fill="#00C896"/>
+                <rect x="45" y="5" width="30" height="30" fill="none" stroke="#00C896" stroke-width="4"/>
+                <rect x="52" y="12" width="16" height="16" fill="#00C896"/>
+                <rect x="5" y="45" width="30" height="30" fill="none" stroke="#00C896" stroke-width="4"/>
+                <rect x="12" y="52" width="16" height="16" fill="#00C896"/>
+                <rect x="45" y="48" width="6" height="6" fill="#00C896"/>
+                <rect x="57" y="48" width="6" height="6" fill="#00C896"/>
+                <rect x="69" y="48" width="6" height="6" fill="#00C896"/>
+                <rect x="45" y="60" width="6" height="6" fill="#00C896"/>
+                <rect x="57" y="60" width="18" height="6" fill="#00C896"/>
+                <rect x="45" y="69" width="30" height="6" fill="#00C896"/>
+              </svg>
+            </div>
+            <div>
+              <div class="plin-number" style="font-size:1rem;padding:8px 14px;">💚 987 654 321</div>
+              <div style="font-size:0.75rem;color:#5C5C58;margin-top:6px;line-height:1.5;">Nombre: <strong>LittleBox SAC</strong><br>Monto exacto del pedido</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <label class="form-label">Adjuntar voucher (foto o captura)</label>
+            <input class="form-input" type="file" accept="image/*" style="padding:8px;">
+          </div>
         </div>
 
         <!-- TRANSFERENCIA -->
@@ -533,6 +606,23 @@ select.form-input { cursor: pointer; }
           </div>
         </div>
 
+        <!-- CONTRAENTREGA -->
+        <div class="card-fields" id="pay-contraentrega" style="display:none;">
+          <div style="display:flex;gap:12px;align-items:flex-start;background:#F7F0E3;border-radius:14px;padding:16px;margin-bottom:14px;">
+            <div style="font-size:28px;flex-shrink:0;">🚚</div>
+            <div>
+              <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;color:#2C2C2A;margin-bottom:4px;">Pago al recibir tu kit</div>
+              <div style="font-size:0.82rem;color:#5C5C58;line-height:1.55;">Pagas en efectivo o con Yape/Plin directamente al repartidor cuando llegue tu pedido. Sin riesgo, sin adelantos.</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:0.82rem;color:#5C5C58;">
+            <div style="display:flex;align-items:center;gap:8px;"><span style="color:#2D9B8A;font-weight:800;">✓</span> Disponible solo en Lima Metropolitana</div>
+            <div style="display:flex;align-items:center;gap:8px;"><span style="color:#2D9B8A;font-weight:800;">✓</span> El repartidor acepta efectivo, Yape o Plin</div>
+            <div style="display:flex;align-items:center;gap:8px;"><span style="color:#2D9B8A;font-weight:800;">✓</span> Puedes revisar el kit antes de pagar</div>
+            <div style="display:flex;align-items:center;gap:8px;"><span style="color:#E87B4A;font-weight:800;">·</span> No disponible para envíos a provincias</div>
+          </div>
+        </div>
+
         <div class="security-note">🔒 Tus datos están protegidos con encriptación SSL de 256 bits</div>
       </div>
       <div class="step-footer">
@@ -545,12 +635,34 @@ select.form-input { cursor: pointer; }
     <div class="success-screen" id="success-screen">
       <div class="success-icon">🎉</div>
       <h2 class="success-title">¡Tu kit está en camino!</h2>
-      <p class="success-sub">Gracias por confiar en LittleBox. Te enviaremos una confirmación a tu correo con el seguimiento del pedido.</p>
+      <p class="success-sub">Gracias por confiar en LittleBox. Te enviaremos la confirmación a tu correo en los próximos minutos.</p>
       <div class="success-order" id="success-order-num">Pedido #LB-2026-0042</div>
-      <div class="success-app">
-        <div class="success-app-title">📱 Ya tienes acceso a la app</div>
-        <div class="success-app-sub">Con tu compra desbloqueaste el acompañamiento completo: seguimiento de hitos, videos con la pedagoga y comunidad de padres.</div>
-        <button class="btn-app" onclick="window.location.href='littlebox-app-onboarding.html'">Descargar la app →</button>
+
+      <!-- CROSS-DEVICE: simulación de correo recibido -->
+      <div style="background:white;border:1.5px solid #EAE5DC;border-radius:18px;width:100%;max-width:420px;overflow:hidden;margin-top:8px;">
+        <div style="background:#F7F0E3;padding:12px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #EAE5DC;">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🕊️</div>
+          <div>
+            <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:0.82rem;color:#2C2C2A;">littlebox@gmail.com</div>
+            <div style="font-size:0.72rem;color:#9A9A94;">Bienvenida a LittleBox · Ahora mismo</div>
+          </div>
+          <div style="margin-left:auto;background:#2D9B8A;color:white;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.65rem;padding:3px 8px;border-radius:50px;">Nuevo</div>
+        </div>
+        <div style="padding:16px 18px;">
+          <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:0.9rem;color:#2C2C2A;margin-bottom:6px;">¡Hola! Tu kit LittleBox está confirmado 🎁</div>
+          <div style="font-size:0.8rem;color:#5C5C58;line-height:1.6;margin-bottom:14px;">Con tu compra desbloqueaste el acompañamiento completo. Descarga la app en tu celular para empezar.</div>
+          <div style="background:#F7F0E3;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:14px;">🔑</span>
+            <div>
+              <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:0.75rem;color:#2C2C2A;">Tu código de acceso</div>
+              <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;color:var(--teal);letter-spacing:0.1em;" id="kit-code">LB-3K8M-9X4P</div>
+            </div>
+          </div>
+          <button class="btn-app" onclick="window.location.href='littlebox-app-onboarding.html'" style="width:100%;text-align:center;display:block;">
+            📱 Descargar la app en mi celular →
+          </button>
+          <div style="font-size:0.7rem;color:#9A9A94;text-align:center;margin-top:8px;">Abre este link desde tu celular o copia el código arriba</div>
+        </div>
       </div>
     </div>
 
@@ -749,12 +861,10 @@ function selectPayment(el, type) {
   document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
   el.classList.add('selected');
   selectedPayment = type;
-  ['tarjeta','yape','plin','transferencia'].forEach(t => {
-    const el = document.getElementById('pay-' + t);
-    if (el) el.style.display = t === type ? 'block' : 'none';
+  ['tarjeta','yape','plin','transferencia','contraentrega'].forEach(t => {
+    const el2 = document.getElementById('pay-' + t);
+    if (el2) el2.style.display = t === type ? 'block' : 'none';
   });
-  if (type === 'yape') document.getElementById('pay-yape').style.display = 'block';
-  if (type === 'plin') document.getElementById('pay-plin').style.display = 'block';
 }
 
 // ─── CARD FORMAT ───
@@ -771,10 +881,15 @@ function formatExpiry(el) {
 // ─── COMPLETE ───
 function completePurchase() {
   const orderNum = 'LB-2026-' + String(Math.floor(Math.random()*9000)+1000);
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const seg1 = Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+  const seg2 = Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+  const kitCode = 'LB-' + seg1 + '-' + seg2;
   document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.step-item').forEach(s => s.classList.add('done'));
   document.getElementById('success-screen').classList.add('active');
   document.getElementById('success-order-num').textContent = 'Pedido #' + orderNum;
+  if(document.getElementById('kit-code')) document.getElementById('kit-code').textContent = kitCode;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
